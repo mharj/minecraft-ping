@@ -1,0 +1,35 @@
+{
+	"compilerOptions": {
+	  "module": "commonjs",
+	  "target": "es6",
+	  "lib": ["es2017", "dom"],
+	  "rootDir": "./src",
+	  "outDir": "./dist",
+	  "mapRoot": "./dist",
+	  "moduleResolution": "node",
+	  "sourceRoot": "./src",
+	  "types": ["node"],
+	  "sourceMap": true,
+	  "declaration": true,
+	  "removeComments": false,
+	  "inlineSources": true,
+	  "forceConsistentCasingInFileNames": true,
+	  "noImplicitReturns": true,
+	  "noImplicitThis": true,
+	  "noImplicitAny": true,
+	  "importHelpers": false,
+	  "strictNullChecks": true,
+	  "suppressImplicitAnyIndexErrors": true,
+	  "noUnusedLocals": true,
+	  "esModuleInterop": true,
+	},
+	"include": [
+		 "src/**/*",
+		 "src/**/**/*"
+	],
+	"exclude": [
+		 "node_modules",
+		 "**/*.spec.ts",
+		 "test"
+	]
+ }
