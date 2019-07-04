@@ -36,7 +36,8 @@ export class PacketDecoder extends Writable {
 		this.buffer = Buffer.concat([this.buffer, chunk]);
 
 		if (this.packetInfo) {
-			if (this.buffer.length < this.packetInfo.length) { // do we still need to read more?
+			if (this.buffer.length < this.packetInfo.length) {
+				// do we still need to read more?
 				return callback();
 			}
 			if (this.buffer.length > this.packetInfo.length) {

@@ -9,14 +9,18 @@ export interface IAddress {
 export interface IHandshakeData {
 	description: {
 		text: string;
-		extra: Array<{
+		extra?: Array<{
 			color?: string;
 			text: string;
 			bold?: boolean;
 			strikethrough?: boolean;
 		}>;
 	};
-	players: {online: number; max: number};
+	players: {
+		online: number; 
+		max: number;
+		sample?: Array<{name: string, id: string}>;
+	};
 	version: {name: string; protocol: number};
 	ping: number;
 	modinfo?: {type: string; modList: string[]};

@@ -6,14 +6,15 @@
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build",
-    "test": "mocha -r ts-node/register test/*.ts"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mharj/minecraft-ping.git"
   },
   "keywords": [
-    "minecraft"
+    "minecraft",
+    "ping"
   ],
   "files": [
     "dist"
@@ -21,17 +22,19 @@
   "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/chai-as-promised": "^7.1.0",
-    "@types/mocha": "^5.2.5",
-    "@types/node": "^10.14.7",
+    "@types/dotenv": "^6.1.1",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^12.0.12",
     "@types/node-int64": "^0.4.29",
     "@types/varint": "^5.0.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
+    "dotenv": "^8.0.0",
     "mocha": "^6.1.4",
-    "ts-node": "^8.1.0",
-    "tslint": "^5.16.0",
+    "ts-node": "^8.3.0",
+    "tslint": "^5.18.0",
     "tslint-config-prettier": "^1.17.0",
-    "typescript": "^3.4.5"
+    "typescript": "^3.5.2"
   },
   "author": "mharj",
   "license": "MIT",

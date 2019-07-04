@@ -58,7 +58,7 @@ const checkSrvRecord = (hostname: string): Promise<IAddress> => {
 };
 
 const openConnection = (address: IAddress): Promise<IMinecraftData> => {
-	let timeout: NodeJS.Timeout | undefined;
+	let timeout: ReturnType<typeof setTimeout> | undefined;
 	return new Promise((resolve, reject) => {
 		const socket = createConnection(address.port, address.hostname, async () => {
 			const packetDecoder = new PacketDecoder();
