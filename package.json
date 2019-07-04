@@ -1,5 +1,5 @@
 {
-  "name": "minecraft-ping",
+  "name": "minecraft-server-ping",
   "version": "0.0.1",
   "description": "Minecraft server status",
   "main": "dist/index.js",
@@ -14,7 +14,8 @@
   },
   "keywords": [
     "minecraft",
-    "ping"
+    "ping",
+    "typescript"
   ],
   "files": [
     "dist"
