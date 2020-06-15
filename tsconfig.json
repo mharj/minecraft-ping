@@ -1,33 +1,38 @@
 {
 	"compilerOptions": {
-	  "module": "commonjs",
-	  "target": "es6",
-	  "rootDir": "./src",
-	  "outDir": "./dist",
-	  "moduleResolution": "node",
-	  "sourceRoot": "./src",
-	  "types": ["node"],
-	  "declaration": true,
-	  "removeComments": false,
-	  "inlineSources": true,
-	  "inlineSourceMap": true,
-	  "forceConsistentCasingInFileNames": true,
-	  "noImplicitReturns": true,
-	  "noImplicitThis": true,
-	  "noImplicitAny": true,
-	  "importHelpers": false,
-	  "strictNullChecks": true,
-	  "suppressImplicitAnyIndexErrors": true,
-	  "noUnusedLocals": true,
-	  "esModuleInterop": true,
+		"module": "commonjs",
+		"target": "es2018",
+		"lib": [
+			"es2018"
+		],
+		"rootDir": "./src",
+		"outDir": "./dist",
+		"moduleResolution": "node",
+		"sourceRoot": "./src",
+		"types": [
+			"node"
+		],
+		"declaration": true,
+		"removeComments": false,
+		"inlineSources": true,
+		"inlineSourceMap": true,
+		"forceConsistentCasingInFileNames": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"noImplicitAny": true,
+		"importHelpers": false,
+		"strictNullChecks": true,
+		"suppressImplicitAnyIndexErrors": true,
+		"noUnusedLocals": true,
+		"esModuleInterop": true,
 	},
 	"include": [
-		 "src/**/*",
-		 "src/**/**/*"
+		"src/**/*",
+		"src/**/**/*"
 	],
 	"exclude": [
-		 "node_modules",
-		 "**/*.spec.ts",
-		 "test"
+		"node_modules",
+		"**/*.spec.ts",
+		"test"
 	]
- }
+}

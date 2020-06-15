@@ -14,7 +14,7 @@ const PROTOCOL_VERSION = 335; // Minecraft 1.12
  */
 export const pingUri = async (uri: string) => {
 	const {protocol, hostname, port} = url.parse(uri);
-	if (!protocol || protocol !== 'minecraft:') {
+	if (!hostname || !protocol || protocol !== 'minecraft:') {
 		throw new TypeError('not correct minecraft URI');
 	}
 	return ping(hostname, port ? parseInt(port, 10) : undefined);

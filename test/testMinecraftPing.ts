@@ -16,7 +16,7 @@ describe('minecraft', () => {
 		expect(data).not.to.be.null;
 		expect(data).to.have.all.keys('description', 'players', 'version', 'ping');
 		expect(data.description).to.have.all.keys('text');
-		expect(data.players).to.have.all.keys('online', 'max', 'sample');
+		expect(data.players).to.contain.keys('online', 'max');
 		expect(data.version).to.have.all.keys('name', 'protocol');
 	});
 	ifWeHaveEnv('connect and get data with uri', async () => {
@@ -25,7 +25,7 @@ describe('minecraft', () => {
 		expect(data).not.to.be.null;
 		expect(data).to.have.all.keys('description', 'players', 'version', 'ping');
 		expect(data.description).to.have.all.keys('text');
-		expect(data.players).to.have.all.keys('online', 'max', 'sample');
+		expect(data.players).to.contain.keys('online', 'max');
 		expect(data.version).to.have.all.keys('name', 'protocol');
 	});
 	it('should connect eu.mineplex.com', async () => {
