@@ -44,13 +44,14 @@ const checkSrvRecord = (hostname: string): Promise<IAddress> => {
 				if (error) {
 					reject(error);
 				} else {
-					if (!resolve[0]) {
+					if (result.length === 0 || !result[0]) {
 						reject(new Error('dns: no srv found with name'));
+					} else {
+						resolve({
+							hostname: result[0].name,
+							port: result[0].port,
+						});
 					}
-					resolve({
-						hostname: result[0].name,
-						port: result[0].port,
-					});
 				}
 			});
 		}
