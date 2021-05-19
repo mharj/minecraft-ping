@@ -10,22 +10,24 @@ const PROTOCOL_VERSION = 335; // Minecraft 1.12
 
 /**
  * ping with URI
- * @param uri minecraft://server[:port]
+ * @param {string} uri minecraft://server[:port]
+ * @return {Promise<IMinecraftData>}
  */
-export const pingUri = async (uri: string) => {
+export function pingUri(uri: string) {
 	const {protocol, hostname, port} = url.parse(uri);
 	if (!hostname || !protocol || protocol !== 'minecraft:') {
 		throw new TypeError('not correct minecraft URI');
 	}
 	return ping(hostname, port ? parseInt(port, 10) : undefined);
-};
+}
 
 /**
  * ping with hostname and port
- * @param hostname hostname
- * @param port port number (defaults 25565)
+ * @param {string=} hostname hostname
+ * @param {number=} port port number (defaults 25565)
+ * @returns {Promise<IMinecraftData>}
  */
-export const ping = async (hostname: string = 'localhost', port: number = 25565): Promise<IMinecraftData> => {
+export async function ping(hostname: string = 'localhost', port: number = 25565): Promise<IMinecraftData> {
 	let address: IAddress = {hostname, port};
 	try {
 		address = await checkSrvRecord(address.hostname);
@@ -33,9 +35,9 @@ export const ping = async (hostname: string = 'localhost', port: number = 25565)
 		// ignore
 	}
 	return openConnection(address);
-};
+}
 
-const checkSrvRecord = (hostname: string): Promise<IAddress> => {
+function checkSrvRecord(hostname: string): Promise<IAddress> {
 	return new Promise((resolve, reject) => {
 		if (isIP(hostname) !== 0) {
 			reject(new Error('Hostname is an IP address'));
@@ -56,9 +58,9 @@ const checkSrvRecord = (hostname: string): Promise<IAddress> => {
 			});
 		}
 	});
-};
+}
 
-const openConnection = (address: IAddress): Promise<IMinecraftData> => {
+function openConnection(address: IAddress): Promise<IMinecraftData> {
 	let timeout: ReturnType<typeof setTimeout> | undefined;
 	return new Promise((resolve, reject) => {
 		const socket = createConnection(address.port, address.hostname, async () => {
@@ -111,9 +113,9 @@ const openConnection = (address: IAddress): Promise<IMinecraftData> => {
 			reject(new Error('Timed out (10 seconds passed)'));
 		}, 10000);
 	});
-};
+}
 
-const createHandshakePacket = (address: IAddress): Buffer => {
+function createHandshakePacket(address: IAddress): Buffer {
 	const portBuffer = Buffer.allocUnsafe(2);
 	portBuffer.writeUInt16BE(address.port, 0);
 	// Return hansdhake packet with request packet
@@ -130,12 +132,12 @@ const createHandshakePacket = (address: IAddress): Buffer => {
 		),
 		createPacket(0, Buffer.alloc(0)),
 	]);
-};
+}
 
-const createPingPacket = (timestamp: bigint) => {
+function createPingPacket(timestamp: bigint) {
 	return createPacket(1, toBufferBE(timestamp, 8));
-};
+}
 
-const createPacket = (packetId: number, data: Buffer): Buffer => {
+function createPacket(packetId: number, data: Buffer): Buffer {
 	return Buffer.concat([Buffer.from(encode(encodingLength(packetId) + data.length)), Buffer.from(encode(packetId)), data]);
-};
+}

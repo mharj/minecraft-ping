@@ -15,7 +15,7 @@ describe('minecraft', () => {
 		const data = await ping(MINECRAFT_SERVER, MINECRAFT_SERVER_PORT ? parseInt(MINECRAFT_SERVER_PORT, 10) : undefined);
 		expect(data).not.to.be.null;
 		expect(data).to.have.all.keys('description', 'players', 'version', 'ping');
-		expect(data.description).to.have.all.keys('text');
+		expect(data.description).to.have.all.keys('text', 'extra');
 		expect(data.players).to.contain.keys('online', 'max');
 		expect(data.version).to.have.all.keys('name', 'protocol');
 	});
@@ -24,7 +24,7 @@ describe('minecraft', () => {
 		const data = await pingUri('minecraft://' + MINECRAFT_SERVER + (MINECRAFT_SERVER_PORT ? ':' + parseInt(MINECRAFT_SERVER_PORT, 10) : ''));
 		expect(data).not.to.be.null;
 		expect(data).to.have.all.keys('description', 'players', 'version', 'ping');
-		expect(data.description).to.have.all.keys('text');
+		expect(data.description).to.have.all.keys('text', 'extra');
 		expect(data.players).to.contain.keys('online', 'max');
 		expect(data.version).to.have.all.keys('name', 'protocol');
 	});

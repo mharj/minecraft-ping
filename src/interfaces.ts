@@ -9,17 +9,17 @@ export interface IAddress {
 export interface IHandshakeData {
 	description: {
 		text: string;
-		extra?: Array<{
+		extra?: {
 			color?: string;
 			text: string;
 			bold?: boolean;
 			strikethrough?: boolean;
-		}>;
+		}[];
 	};
 	players: {
-		online: number; 
+		online: number;
 		max: number;
-		sample?: Array<{name: string, id: string}>;
+		sample?: {name: string; id: string}[];
 	};
 	version: {name: string; protocol: number};
 	ping: number;
