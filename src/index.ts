@@ -1,7 +1,6 @@
 import {toBufferBE} from 'bigint-buffer';
 import {resolveSrv} from 'dns';
 import {createConnection, isIP} from 'net';
-import * as url from 'url';
 import {encode, encodingLength} from 'varint';
 import {IAddress, IHandshakeData, IMinecraftData} from './interfaces';
 import {PacketDecoder} from './PacketDecoder';
@@ -13,8 +12,8 @@ const PROTOCOL_VERSION = 335; // Minecraft 1.12
  * @param {string} uri minecraft://server[:port]
  * @return {Promise<IMinecraftData>}
  */
-export function pingUri(uri: string) {
-	const {protocol, hostname, port} = url.parse(uri);
+export function pingUri(uri: string): Promise<IMinecraftData> {
+	const {protocol, hostname, port} = new URL(uri);
 	if (!hostname || !protocol || protocol !== 'minecraft:') {
 		throw new TypeError('not correct minecraft URI');
 	}
@@ -27,7 +26,7 @@ export function pingUri(uri: string) {
  * @param {number=} port port number (defaults 25565)
  * @returns {Promise<IMinecraftData>}
  */
-export async function ping(hostname: string = 'localhost', port: number = 25565): Promise<IMinecraftData> {
+export async function ping(hostname = 'localhost', port = 25565): Promise<IMinecraftData> {
 	let address: IAddress = {hostname, port};
 	try {
 		address = await checkSrvRecord(address.hostname);

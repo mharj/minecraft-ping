@@ -1,5 +1,5 @@
 import {toBigIntBE} from 'bigint-buffer';
-import {Writable} from 'stream';
+import internal, {Writable} from 'stream';
 import {decode, encodingLength} from 'varint';
 
 enum PackageType {
@@ -17,18 +17,18 @@ export class PacketDecoder extends Writable {
 	private packetInfo: IHeader | undefined;
 	private buffer: Buffer;
 
-	constructor(options?: any) {
+	constructor(options?: internal.WritableOptions | undefined) {
 		super(options);
 		this.buffer = Buffer.alloc(0);
 	}
 
-	public oncePromise<T extends any>(event: string): Promise<T> {
+	public oncePromise<T extends unknown>(event: string): Promise<T> {
 		return new Promise((resolve) => {
 			this.once(event, resolve);
 		});
 	}
 
-	public async _write(chunk: Buffer, encoding: any, callback: any) {
+	public async _write(chunk: Buffer, encoding: any, callback: () => void): Promise<void> {
 		const {getPayload, decodeHandshake, decodePong} = this;
 		if (!this.packetInfo) {
 			this.packetInfo = this.decodeHeader(chunk);
@@ -80,7 +80,7 @@ export class PacketDecoder extends Writable {
 		return data.slice(header.offset, data.length);
 	}
 
-	private decodeHandshake(data: Buffer): object {
+	private decodeHandshake(data: Buffer): Record<string, unknown> {
 		return JSON.parse(data.toString());
 	}
 
