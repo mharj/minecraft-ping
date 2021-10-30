@@ -1,6 +1,6 @@
 {
     "name": "minecraft-server-ping",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "Minecraft server status",
     "main": "dist/index.js",
     "scripts": {
