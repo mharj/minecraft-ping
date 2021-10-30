@@ -72,7 +72,6 @@
     },
     "homepage": "https://github.com/mharj/minecraft-ping#readme",
     "dependencies": {
-        "bigint-buffer": "^1.1.5",
         "varint": "^6.0.0"
     }
 }

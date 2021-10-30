@@ -1,11 +1,10 @@
-import {toBufferBE} from 'bigint-buffer';
 import {resolveSrv} from 'dns';
 import {createConnection, isIP} from 'net';
 import {encode, encodingLength} from 'varint';
 import {IAddress, IHandshakeData, IMinecraftData} from './interfaces';
 import {PacketDecoder} from './PacketDecoder';
 
-const PROTOCOL_VERSION = 335; // Minecraft 1.12
+const PROTOCOL_VERSION = 736; // Minecraft 1.16.1
 
 interface Options {
 	/** timeout in milliseconds */
@@ -17,7 +16,7 @@ interface Options {
  * @param {string} uri minecraft://server[:port]
  * @return {Promise<IMinecraftData>}
  */
-export function pingUri(uri: string, options: Options = {}) {
+export function pingUri(uri: string, options: Options = {}): Promise<IMinecraftData> {
 	const {protocol, hostname, port} = new URL(uri);
 	if (!hostname || !protocol || protocol !== 'minecraft:') {
 		throw new TypeError('not correct minecraft URI');
@@ -31,7 +30,7 @@ export function pingUri(uri: string, options: Options = {}) {
  * @param {number=} port port number (defaults 25565)
  * @returns {Promise<IMinecraftData>}
  */
-export async function ping(hostname= 'localhost', port= 25565, options: Options = {}): Promise<IMinecraftData> {
+export async function ping(hostname = 'localhost', port = 25565, options: Options = {}): Promise<IMinecraftData> {
 	let address: IAddress = {hostname, port};
 	try {
 		address = await checkSrvRecord(address.hostname);
@@ -139,7 +138,9 @@ function createHandshakePacket(address: IAddress): Buffer {
 }
 
 function createPingPacket(timestamp: bigint) {
-	return createPacket(1, toBufferBE(timestamp, 8));
+	const pingBuffer = Buffer.allocUnsafe(8);
+	pingBuffer.writeBigUInt64BE(timestamp);
+	return createPacket(1, pingBuffer);
 }
 
 function createPacket(packetId: number, data: Buffer): Buffer {

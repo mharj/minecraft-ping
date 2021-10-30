@@ -1,4 +1,3 @@
-import {toBigIntBE} from 'bigint-buffer';
 import internal, {Writable} from 'stream';
 import {decode, encodingLength} from 'varint';
 
@@ -72,7 +71,7 @@ export class PacketDecoder extends Writable {
 		return {
 			id: buffer.readUInt8(encodingLength(length)),
 			length: length + encodingLength(length),
-			offset: encodingLength(length) + 3,
+			offset: encodingLength(length) + 1,
 		};
 	}
 
@@ -80,11 +79,14 @@ export class PacketDecoder extends Writable {
 		return data.slice(header.offset, data.length);
 	}
 
-	private decodeHandshake(data: Buffer): Record<string, unknown> {
+	private decodeHandshake(buffer: Buffer): Record<string, unknown> {
+		const length = decode(buffer);
+		const data = buffer.slice(encodingLength(length), encodingLength(length) + length);
 		return JSON.parse(data.toString());
 	}
 
 	private decodePong(data: Buffer): number {
-		return Number(BigInt(Date.now()) - toBigIntBE(data));
+		const pongData = data.readBigUInt64BE(0);
+		return Number(BigInt(Date.now()) - pongData);
 	}
 }
