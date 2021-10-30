@@ -55,4 +55,7 @@ describe('minecraft', () => {
 	it('should not connect', async () => {
 		await expect(ping('localhost', 26262)).to.eventually.be.rejectedWith(Error);
 	}).timeout(5000);
+	it('should not connect with small timeout', async () => {
+		await expect(ping('google.com', 26262, {timeout: 100})).to.eventually.be.rejectedWith(Error);
+	}).timeout(1000);
 });
