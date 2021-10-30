@@ -16,6 +16,10 @@ const data = await ping('eu.mineplex.com', 25565);
 ```
 
 ```javascript
+const data = await ping('eu.mineplex.com', 25565, {timeout: 100}); // timeout 100ms
+```
+
+```javascript
 const data = await pingUri('minecraft://eu.mineplex.com');
 ```
 
