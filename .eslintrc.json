@@ -1,0 +1,20 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+        "@typescript-eslint",
+        "prettier",
+        "sonarjs"
+    ],
+    "extends": [
+        "standard",
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:prettier/recommended",
+        "plugin:sonarjs/recommended"
+    ],
+    "rules": {
+        "camelcase": 1,
+        "@typescript-eslint/no-this-alias": ["error",{"allowedNames": ["self"]}]
+    }
+}

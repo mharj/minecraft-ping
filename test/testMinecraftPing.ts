@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 /* tslint:disable:no-unused-expression */
 import chai, {expect} from 'chai';
 import chaiAsPromised from 'chai-as-promised';
