@@ -111,12 +111,12 @@ function openConnection(address: IAddress, options: Options): Promise<IMinecraft
 			}
 			reject(new Error('Timed out'));
 		});
-
-		// Packet timeout (10 seconds)
+		// Packet timeout
+		const timeoutValue = options?.timeout || 10000;
 		timeout = setTimeout(() => {
 			socket.end();
-			reject(new Error('Timed out (10 seconds passed)'));
-		}, options?.timeout || 10000);
+			reject(new Error(`Timed out (${timeoutValue} ms)`));
+		}, timeoutValue);
 	});
 }
 
