@@ -7,17 +7,22 @@ import {PacketDecoder} from './PacketDecoder';
 
 const PROTOCOL_VERSION = 335; // Minecraft 1.12
 
+interface Options {
+	/** timeout in milliseconds */
+	timeout?: number;
+}
+
 /**
  * ping with URI
  * @param {string} uri minecraft://server[:port]
  * @return {Promise<IMinecraftData>}
  */
-export function pingUri(uri: string): Promise<IMinecraftData> {
+export function pingUri(uri: string, options: Options = {}) {
 	const {protocol, hostname, port} = new URL(uri);
 	if (!hostname || !protocol || protocol !== 'minecraft:') {
 		throw new TypeError('not correct minecraft URI');
 	}
-	return ping(hostname, port ? parseInt(port, 10) : undefined);
+	return ping(hostname, port ? parseInt(port, 10) : undefined, options);
 }
 
 /**
@@ -26,14 +31,14 @@ export function pingUri(uri: string): Promise<IMinecraftData> {
  * @param {number=} port port number (defaults 25565)
  * @returns {Promise<IMinecraftData>}
  */
-export async function ping(hostname = 'localhost', port = 25565): Promise<IMinecraftData> {
+export async function ping(hostname= 'localhost', port= 25565, options: Options = {}): Promise<IMinecraftData> {
 	let address: IAddress = {hostname, port};
 	try {
 		address = await checkSrvRecord(address.hostname);
 	} catch (err) {
 		// ignore
 	}
-	return openConnection(address);
+	return openConnection(address, options);
 }
 
 function checkSrvRecord(hostname: string): Promise<IAddress> {
@@ -59,7 +64,7 @@ function checkSrvRecord(hostname: string): Promise<IAddress> {
 	});
 }
 
-function openConnection(address: IAddress): Promise<IMinecraftData> {
+function openConnection(address: IAddress, options: Options): Promise<IMinecraftData> {
 	let timeout: ReturnType<typeof setTimeout> | undefined;
 	return new Promise((resolve, reject) => {
 		const socket = createConnection(address.port, address.hostname, async () => {
@@ -105,12 +110,12 @@ function openConnection(address: IAddress): Promise<IMinecraftData> {
 			}
 			reject(new Error('Timed out'));
 		});
-
-		// Packet timeout (10 seconds)
+		// Packet timeout
+		const timeoutValue = options?.timeout || 10000;
 		timeout = setTimeout(() => {
 			socket.end();
-			reject(new Error('Timed out (10 seconds passed)'));
-		}, 10000);
+			reject(new Error(`Timed out (${timeoutValue} ms)`));
+		}, timeoutValue);
 	});
 }
 
