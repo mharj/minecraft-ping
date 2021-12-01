@@ -14,6 +14,10 @@ export interface IHandshakeData {
 			text: string;
 			bold?: boolean;
 			strikethrough?: boolean;
+			extra?: {
+				color: string;
+				text: string;
+			}[];
 		}[];
 	};
 	players: {
