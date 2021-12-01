@@ -1,0 +1,21 @@
+# Node project setup
+* text=auto
+*.ps1       text eol=crlf
+*.js        text eol=lf
+*.ts        text eol=lf
+*.html      text eol=lf
+*.jsx       text eol=lf
+*.json      text eol=lf
+*.scss      text eol=lf
+*.svg       text eol=lf
+*.sh        text eol=lf
+*.md        text eol=lf
+*.yml       text eol=lf
+.gitignore  text eol=lf
+.firebaserc text eol=lf
+Dockerfile  text eol=lf
+
+# binary
+*.jpg       binary
+*.png       binary
+*.ico       binary
