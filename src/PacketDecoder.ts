@@ -21,13 +21,13 @@ export class PacketDecoder extends Writable {
 		this.buffer = Buffer.alloc(0);
 	}
 
-	public oncePromise<T extends unknown>(event: string): Promise<T> {
+	public oncePromise<T>(event: string): Promise<T> {
 		return new Promise((resolve) => {
 			this.once(event, resolve);
 		});
 	}
 
-	public async _write(chunk: Buffer, encoding: any, callback: () => void): Promise<void> {
+	public async _write(chunk: Buffer, _encoding: BufferEncoding, callback: () => void): Promise<void> {
 		const {getPayload, decodeHandshake, decodePong} = this;
 		if (!this.packetInfo) {
 			this.packetInfo = this.decodeHeader(chunk);

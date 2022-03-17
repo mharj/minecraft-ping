@@ -1,5 +1,5 @@
 import {resolveSrv} from 'dns';
-import {createConnection, isIP} from 'net';
+import {createConnection, isIP, Socket} from 'net';
 import {encode, encodingLength} from 'varint';
 import {IAddress, IHandshakeData, IMinecraftData} from './interfaces';
 import {PacketDecoder} from './PacketDecoder';
@@ -66,16 +66,17 @@ function checkSrvRecord(hostname: string): Promise<IAddress> {
 function openConnection(address: IAddress, options: Options): Promise<IMinecraftData> {
 	let timeout: ReturnType<typeof setTimeout> | undefined;
 	return new Promise((resolve, reject) => {
+		const handleError = (error: Error, thisSocket: Socket) => {
+			thisSocket.destroy();
+			if (timeout) {
+				clearTimeout(timeout);
+			}
+			reject(error);
+		};
 		const socket = createConnection(address.port, address.hostname, async () => {
 			const packetDecoder = new PacketDecoder();
 			socket.pipe(packetDecoder);
-			packetDecoder.once('error', (error) => {
-				socket.destroy();
-				if (timeout) {
-					clearTimeout(timeout);
-				}
-				reject(error);
-			});
+			packetDecoder.once('error', (error) => handleError(error, socket));
 			// handshake
 			socket.write(createHandshakePacket(address));
 			const handshakeData = await packetDecoder.oncePromise<IHandshakeData>('handshake');
@@ -93,14 +94,7 @@ function openConnection(address: IAddress, options: Options): Promise<IMinecraft
 			});
 		});
 		// Destroy on error
-		socket.once('error', (error) => {
-			socket.destroy();
-			if (timeout) {
-				clearTimeout(timeout);
-			}
-			reject(error);
-		});
-
+		socket.once('error', (error) => handleError(error, socket));
 		// Destroy on timeout
 		socket.once('timeout', () => {
 			socket.destroy();

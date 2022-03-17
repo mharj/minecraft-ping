@@ -45,12 +45,12 @@ describe('minecraft', () => {
 		expect(data.players).to.have.all.keys('online', 'max', 'sample');
 		expect(data.version).to.have.all.keys('name', 'protocol');
 	});
-	it('should connect play.minelink.net', async () => {
-		const data = await pingUri('minecraft://play.minelink.net');
+	it('should connect etherlands.com', async () => {
+		const data = await pingUri('minecraft://etherlands.com');
 		expect(data).not.to.be.null;
-		expect(data).to.have.all.keys('description', 'players', 'version', 'ping', 'favicon', 'modinfo');
-		expect(data.description).to.have.all.keys('text', 'extra');
-		expect(data.players).to.have.all.keys('online', 'max', 'sample');
+		expect(data).to.have.all.keys('description', 'players', 'version', 'ping', 'favicon');
+		expect(data.description).to.have.all.keys('text');
+		expect(data.players).to.have.all.keys('online', 'max');
 		expect(data.version).to.have.all.keys('name', 'protocol');
 	});
 	it('should not connect', async () => {
