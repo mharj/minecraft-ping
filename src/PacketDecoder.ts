@@ -27,7 +27,7 @@ export class PacketDecoder extends Writable {
 		});
 	}
 
-	public async _write(chunk: Buffer, _encoding: BufferEncoding, callback: () => void): Promise<void> {
+	public _write(chunk: Buffer, _encoding: BufferEncoding, callback: (error?: Error | null) => void): void {
 		const {getPayload, decodeHandshake, decodePong} = this;
 		if (!this.packetInfo) {
 			this.packetInfo = this.decodeHeader(chunk);
@@ -40,7 +40,7 @@ export class PacketDecoder extends Writable {
 				return callback();
 			}
 			if (this.buffer.length > this.packetInfo.length) {
-				throw new Error('we did overrun expected data size!');
+				return callback(new Error('we did overrun expected data size!'));
 			}
 		}
 		try {
