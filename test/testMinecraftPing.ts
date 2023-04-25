@@ -11,20 +11,22 @@ const ifWeHaveEnv = process.env.MINECRAFT_SERVER && process.env.MINECRAFT_SERVER
 chai.use(chaiAsPromised);
 
 describe('minecraft', () => {
-	ifWeHaveEnv('connect and get data', async () => {
+	ifWeHaveEnv('connect and get data', async function () {
+		this.timeout(10000);
 		const {MINECRAFT_SERVER, MINECRAFT_SERVER_PORT} = process.env;
 		const data = await ping(MINECRAFT_SERVER, MINECRAFT_SERVER_PORT ? parseInt(MINECRAFT_SERVER_PORT, 10) : undefined);
 		expect(data).not.to.be.null;
-		expect(data).to.have.all.keys('description', 'players', 'version', 'ping');
+		expect(data).to.have.all.keys('description', 'players', 'version', 'ping', 'enforcesSecureChat', 'previewsChat');
 		expect(data.description).to.have.all.keys('text', 'extra');
 		expect(data.players).to.contain.keys('online', 'max');
 		expect(data.version).to.have.all.keys('name', 'protocol');
 	});
 	ifWeHaveEnv('connect and get data with uri', async () => {
 		const {MINECRAFT_SERVER, MINECRAFT_SERVER_PORT} = process.env;
-		const data = await pingUri('minecraft://' + MINECRAFT_SERVER + (MINECRAFT_SERVER_PORT ? ':' + parseInt(MINECRAFT_SERVER_PORT, 10) : ''));
+		const url = new URL('minecraft://' + MINECRAFT_SERVER + (MINECRAFT_SERVER_PORT ? ':' + parseInt(MINECRAFT_SERVER_PORT, 10) : ''));
+		const data = await pingUri(Promise.resolve(url));
 		expect(data).not.to.be.null;
-		expect(data).to.have.all.keys('description', 'players', 'version', 'ping');
+		expect(data).to.have.all.keys('description', 'players', 'version', 'ping', 'enforcesSecureChat', 'previewsChat');
 		expect(data.description).to.have.all.keys('text', 'extra');
 		expect(data.players).to.contain.keys('online', 'max');
 		expect(data.version).to.have.all.keys('name', 'protocol');
@@ -34,7 +36,7 @@ describe('minecraft', () => {
 		expect(data).not.to.be.null;
 		expect(data).to.have.all.keys('description', 'players', 'version', 'ping', 'favicon', 'modinfo');
 		expect(data.description).to.have.all.keys('text', 'extra');
-		expect(data.players).to.have.all.keys('online', 'max');
+		expect(data.players).to.have.all.keys('online', 'max', 'sample');
 		expect(data.version).to.have.all.keys('name', 'protocol');
 	});
 	it('should connect play.royallegacy.net', async () => {

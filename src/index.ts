@@ -1,8 +1,21 @@
-import {resolveSrv} from 'dns';
+import {resolveSrv, SrvRecord} from 'dns';
 import {createConnection, isIP, Socket} from 'net';
 import {encode, encodingLength} from 'varint';
 import {IAddress, IHandshakeData, IMinecraftData} from './interfaces';
 import {PacketDecoder} from './PacketDecoder';
+
+function resolveSrvPromise(srv: string): Promise<SrvRecord[]> {
+	return new Promise((resolve) => {
+		resolveSrv(srv, (error, result) => {
+			if (error) {
+				// always error if not found
+				resolve([]);
+			} else {
+				resolve(result);
+			}
+		});
+	});
+}
 
 const PROTOCOL_VERSION = 736; // Minecraft 1.16.1
 
@@ -16,8 +29,8 @@ interface Options {
  * @param {string} uri minecraft://server[:port]
  * @return {Promise<IMinecraftData>}
  */
-export function pingUri(uri: string, options: Options = {}): Promise<IMinecraftData> {
-	const {protocol, hostname, port} = new URL(uri);
+export async function pingUri(uri: string | URL | Promise<string | URL>, options: Options = {}): Promise<IMinecraftData> {
+	const {protocol, hostname, port} = new URL(await uri);
 	if (!hostname || !protocol || protocol !== 'minecraft:') {
 		throw new TypeError('not correct minecraft URI');
 	}
@@ -30,37 +43,30 @@ export function pingUri(uri: string, options: Options = {}): Promise<IMinecraftD
  * @param {number=} port port number (defaults 25565)
  * @returns {Promise<IMinecraftData>}
  */
-export async function ping(hostname = 'localhost', port = 25565, options: Options = {}): Promise<IMinecraftData> {
-	let address: IAddress = {hostname, port};
-	try {
-		address = await checkSrvRecord(address.hostname);
-	} catch (err) {
-		// ignore
+export async function ping(
+	hostname: string | Promise<string> = 'localhost',
+	port: number | Promise<number> = 25565,
+	options: Options = {},
+): Promise<IMinecraftData> {
+	let address = await checkSrvRecord(await hostname);
+	if (!address) {
+		address = {hostname: await hostname, port: await port};
 	}
 	return openConnection(address, options);
 }
 
-function checkSrvRecord(hostname: string): Promise<IAddress> {
-	return new Promise((resolve, reject) => {
-		if (isIP(hostname) !== 0) {
-			reject(new Error('Hostname is an IP address'));
-		} else {
-			resolveSrv('_minecraft._tcp.' + hostname, (error, result) => {
-				if (error) {
-					reject(error);
-				} else {
-					if (result.length === 0 || !result[0]) {
-						reject(new Error('dns: no srv found with name'));
-					} else {
-						resolve({
-							hostname: result[0].name,
-							port: result[0].port,
-						});
-					}
-				}
-			});
-		}
-	});
+async function checkSrvRecord(hostname: string): Promise<IAddress | undefined> {
+	if (isIP(hostname) !== 0) {
+		return undefined;
+	}
+	const srvRecords = await resolveSrvPromise(`_minecraft._tcp.${hostname}`);
+	if (srvRecords.length === 0) {
+		return undefined;
+	}
+	return {
+		hostname: srvRecords[0].name,
+		port: srvRecords[0].port,
+	};
 }
 
 function openConnection(address: IAddress, options: Options): Promise<IMinecraftData> {
