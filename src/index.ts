@@ -1,8 +1,8 @@
 import {createConnection, isIP, Socket} from 'net';
+import {createHandshakePacket, createPingPacket} from './minecraftPackets';
 import {IAddress, IHandshakeData, IMinecraftData} from './interfaces';
 import {PacketDecoder} from './PacketDecoder';
 import {srvRecord} from './dnsSrv';
-import {createHandshakePacket, createPingPacket} from './minecraftPackets';
 
 /**
  * Options for ping

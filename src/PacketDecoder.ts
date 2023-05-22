@@ -1,5 +1,5 @@
-import internal, {Writable} from 'stream';
 import {decode, encodingLength} from 'varint';
+import internal, {Writable} from 'stream';
 import {MinecraftPackageType} from './minecraftPackets';
 
 interface IHeader {

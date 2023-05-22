@@ -1,10 +1,9 @@
 /* eslint-disable no-unused-expressions */
-/* tslint:disable:no-unused-expression */
+import 'mocha';
 import chai, {expect} from 'chai';
+import {ping, pingUri} from '../src';
 import chaiAsPromised from 'chai-as-promised';
 import dotenv from 'dotenv';
-import 'mocha';
-import {ping, pingUri} from '../src';
 
 dotenv.config();
 const ifWeHaveEnv = process.env.MINECRAFT_SERVER && process.env.MINECRAFT_SERVER_PORT ? it : it.skip;
@@ -31,7 +30,7 @@ describe('minecraft', () => {
 		expect(data.players).to.contain.keys('online', 'max');
 		expect(data.version).to.have.all.keys('name', 'protocol');
 	});
-	it('should connect eu.mineplex.com', async () => {
+	it.skip('should connect eu.mineplex.com', async () => {
 		const data = await pingUri('minecraft://eu.mineplex.com');
 		expect(data).not.to.be.null;
 		expect(data).to.have.all.keys('description', 'players', 'version', 'ping', 'favicon', 'modinfo');

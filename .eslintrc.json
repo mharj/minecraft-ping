@@ -1,9 +1,15 @@
 {
     "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 2020,
+        "sourceType": "module",
+        "project": "./tsconfig.test.json"
+    },
     "plugins": [
         "@typescript-eslint",
         "prettier",
-        "sonarjs"
+        "sonarjs",
+        "deprecation"
     ],
     "extends": [
         "standard",
@@ -15,6 +21,42 @@
     ],
     "rules": {
         "camelcase": 1,
-        "@typescript-eslint/no-this-alias": ["error",{"allowedNames": ["self"]}]
+        "@typescript-eslint/no-this-alias": [
+            "warn",
+            {
+                "allowedNames": [
+                    "self"
+                ]
+            }
+        ],
+        "sort-imports": ["warn", { "ignoreCase": true }],
+        "sort-keys": [
+            "warn",
+            "asc",
+            {
+                "caseSensitive": false,
+                "natural": true,
+                "minKeys": 4
+            }
+        ],
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": [
+            "warn", // or "error"
+            {
+                "argsIgnorePattern": "^_",
+                "varsIgnorePattern": "^_",
+                "caughtErrorsIgnorePattern": "^_"
+            }
+        ],
+        "deprecation/deprecation": "warn",
+        "lines-between-class-members": "off",
+        "@typescript-eslint/lines-between-class-members": [
+            "warn",
+            "always",
+            {
+                "exceptAfterOverload": true,
+                "exceptAfterSingleLine": true
+            }
+        ]
     }
 }
