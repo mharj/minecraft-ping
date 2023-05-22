@@ -1,9 +1,9 @@
 name: Publish minecraft-server-ping to npmjs
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
-    branches: [master]
+    branches: [main]
 
 env:
   # Setting an environment variable with the value of a configuration variable
