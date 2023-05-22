@@ -1,13 +1,9 @@
 import internal, {Writable} from 'stream';
 import {decode, encodingLength} from 'varint';
-
-enum PackageType {
-	HANDSHAKE = 0,
-	PING = 1,
-}
+import {MinecraftPackageType} from './minecraftPackets';
 
 interface IHeader {
-	id: PackageType;
+	id: MinecraftPackageType;
 	length: number;
 	offset: number;
 }
@@ -28,7 +24,6 @@ export class PacketDecoder extends Writable {
 	}
 
 	public _write(chunk: Buffer, _encoding: BufferEncoding, callback: (error?: Error | null) => void): void {
-		const {getPayload, decodeHandshake, decodePong} = this;
 		if (!this.packetInfo) {
 			this.packetInfo = this.decodeHeader(chunk);
 		}
@@ -46,12 +41,12 @@ export class PacketDecoder extends Writable {
 		try {
 			if (this.packetInfo) {
 				switch (this.packetInfo.id) {
-					case PackageType.HANDSHAKE: {
-						this.emit('handshake', decodeHandshake(getPayload(this.packetInfo, this.buffer)));
+					case MinecraftPackageType.HANDSHAKE: {
+						this.emit('handshake', this.decodeHandshake(this.getPayload(this.packetInfo, this.buffer)));
 						break;
 					}
-					case PackageType.PING: {
-						this.emit('pong', decodePong(getPayload(this.packetInfo, this.buffer)));
+					case MinecraftPackageType.PING: {
+						this.emit('pong', this.decodePong(this.getPayload(this.packetInfo, this.buffer)));
 						break;
 					}
 					default:

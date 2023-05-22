@@ -1,0 +1,63 @@
+name: Publish minecraft-server-ping to npmjs
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+env:
+  # Setting an environment variable with the value of a configuration variable
+  CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+          registry-url: "https://registry.npmjs.org"
+      - run: npm ci
+      - run: npm test
+      - run: npm run lint
+
+      # NPM version check
+      - name: Get current repo version
+        run: |
+          echo "PACKAGE_NAME=$(jq -r .name package.json)" >> $GITHUB_ENV
+          echo "PACKAGE_VERSION=$(jq -r .version package.json)" >> $GITHUB_ENV
+          echo "HAVE_COVERAGE_SCRIPT=$(jq 'if .scripts.coverage == null then false else true end' package.json)" >> $GITHUB_ENV
+
+      - name: Get current npmjs version for ${{env.PACKAGE_NAME}}
+        run: |
+          echo "NPM_VERSION=$(curl -s https://registry.npmjs.org/${{ env.PACKAGE_NAME }} | jq -r '."dist-tags".latest')" >> $GITHUB_ENV
+
+      # code coverage part
+      - run: npm run coverage
+        if: |
+          github.ref == 'refs/heads/main' &&
+          env.CC_TEST_REPORTER_ID != '' &&
+          env.HAVE_COVERAGE_SCRIPT == 'true' &&
+          env.PACKAGE_VERSION != env.NPM_VERSION
+
+      - name: Push coverage to Code Climate Test Reporter
+        if: |
+          github.ref == 'refs/heads/main' &&
+          env.CC_TEST_REPORTER_ID != '' &&
+          env.HAVE_COVERAGE_SCRIPT == 'true' &&
+          env.PACKAGE_VERSION != env.NPM_VERSION
+        uses: aktions/codeclimate-test-reporter@v1
+        with:
+          codeclimate-test-reporter-id: ${{ env.CC_TEST_REPORTER_ID }}
+
+      # npm publish when PR done
+      - name: Publish ${{env.PACKAGE_NAME}} ${{env.PACKAGE_VERSION}}
+        run: npm publish --access public
+        if: |
+          github.ref == 'refs/heads/main' &&
+          env.NPM_TOKEN != '' &&
+          env.PACKAGE_VERSION != env.NPM_VERSION
+        env:
+          NODE_AUTH_TOKEN: ${{ env.NPM_TOKEN }}
