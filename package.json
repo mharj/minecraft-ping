@@ -72,6 +72,7 @@
     },
     "homepage": "https://github.com/mharj/minecraft-ping#readme",
     "dependencies": {
+        "mharj-result": "^0.2.1",
         "varint": "^6.0.0"
     }
 }

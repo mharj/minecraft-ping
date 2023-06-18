@@ -1,5 +1,6 @@
 import {createConnection, isIP, Socket} from 'net';
 import {createHandshakePacket, createPingPacket} from './minecraftPackets';
+import {Err, IResult, Ok} from 'mharj-result';
 import {IAddress, IHandshakeData, IMinecraftData} from './interfaces';
 import {PacketDecoder} from './PacketDecoder';
 import {srvRecord} from './dnsSrv';
@@ -48,6 +49,20 @@ export async function pingUri(uri: string | URL | Promise<string | URL>, options
 }
 
 /**
+ * ping with URI, return result object
+ * @param {string | URL | Promise<string | URL>} uri minecraft://server[:port]
+ * @param {Options=} options options
+ * @return {Promise<IResult<IMinecraftData>>}
+ */
+export async function pingUriResult(uri: string | URL | Promise<string | URL>, options: Options = {}): Promise<IResult<IMinecraftData>> {
+	try {
+		return new Ok(await pingUri(uri, options));
+	} catch (err) {
+		return new Err(err);
+	}
+}
+
+/**
  * ping with hostname and port
  * @param {string=} hostname hostname (defaults 'localhost')
  * @param {number=} port port number (defaults 25565)
@@ -64,6 +79,25 @@ export async function ping(
 		address = {hostname: await hostname, port: await port};
 	}
 	return openConnection(address, options);
+}
+
+/**
+ * ping with hostname and port, return result object
+ * @param {string=} hostname hostname (defaults 'localhost')
+ * @param {number=} port port number (defaults 25565)
+ * @param {Options=} options options
+ * @returns {Promise<IResult<IMinecraftData>>}
+ */
+export async function pingResult(
+	hostname: string | Promise<string> = 'localhost',
+	port: number | Promise<number> = 25565,
+	options: Options = {},
+): Promise<IResult<IMinecraftData>> {
+	try {
+		return new Ok(await ping(hostname, port, options));
+	} catch (err) {
+		return new Err(err);
+	}
 }
 
 function openConnection(address: IAddress, options: Options): Promise<IMinecraftData> {

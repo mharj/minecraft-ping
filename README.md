@@ -26,3 +26,14 @@ const data = await pingUri('minecraft://eu.mineplex.com');
 ```javascript
 const data = await pingUri('minecraft://eu.mineplex.com:25565');
 ```
+
+```javascript
+const result = await pingUriResult('minecraft://eu.mineplex.com'); // or pingResult('eu.mineplex.com', 25565)
+if (result.isOk()) {
+    console.log(result.Ok());
+} else {
+    console.log(result.Err()?.message);
+}
+// or with just error throw
+const data = result.unwrap();
+```
