@@ -25,6 +25,7 @@
 		"strictNullChecks": true,
 		"noUnusedLocals": true,
 		"esModuleInterop": true,
+		"strict": true,
 	},
 	"include": [
 		"src",

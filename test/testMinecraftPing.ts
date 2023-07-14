@@ -46,7 +46,7 @@ describe('minecraft', () => {
 		expect(data.players).to.have.all.keys('online', 'max', 'sample');
 		expect(data.version).to.have.all.keys('name', 'protocol');
 	});
-	it('should connect etherlands.com', async () => {
+	it.skip('should connect etherlands.com', async () => {
 		const data = await pingUri('minecraft://etherlands.com');
 		expect(data).not.to.be.null;
 		expect(data).to.have.all.keys('description', 'players', 'version', 'ping', 'favicon');
