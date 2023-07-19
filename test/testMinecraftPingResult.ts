@@ -15,7 +15,10 @@ describe('minecraft result', () => {
 	ifWeHaveEnv('connect and get data', async function () {
 		this.timeout(10000);
 		const {MINECRAFT_SERVER, MINECRAFT_SERVER_PORT} = process.env;
-		const result: Result<IMinecraftData, Error> = await pingResult(MINECRAFT_SERVER, MINECRAFT_SERVER_PORT ? parseInt(MINECRAFT_SERVER_PORT, 10) : undefined);
+		const result: Result<IMinecraftData, Error> = await pingResult({
+			hostname: MINECRAFT_SERVER,
+			port: MINECRAFT_SERVER_PORT ? parseInt(MINECRAFT_SERVER_PORT, 10) : undefined,
+		});
 		const data: IMinecraftData = result.unwrap();
 		expect(data).not.to.be.null;
 		expect(data).to.have.all.keys('description', 'players', 'version', 'ping', 'enforcesSecureChat', 'previewsChat');
@@ -35,11 +38,11 @@ describe('minecraft result', () => {
 		expect(data.version).to.have.all.keys('name', 'protocol');
 	});
 	it('should not connect', async () => {
-		const res: Result<IMinecraftData, Error> = await pingResult('localhost', 26262);
-		expect(res.isErr()).to.be.eq(true);
+		const res: Result<IMinecraftData, Error> = await pingResult({hostname: 'localhost', port: 26262});
+		expect(res.isErr).to.be.eq(true);
 	}).timeout(5000);
 	it('should not connect with small timeout', async () => {
-		const res: Result<IMinecraftData, Error> = await pingResult('google.com', 26262, {timeout: 100});
-		expect(res.isErr()).to.be.eq(true);
+		const res: Result<IMinecraftData, Error> = await pingResult({hostname: 'google.com', port: 26262}, {timeout: 100});
+		expect(res.isErr).to.be.eq(true);
 	}).timeout(1000);
 });

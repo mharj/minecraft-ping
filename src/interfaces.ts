@@ -1,5 +1,16 @@
+/**
+ * Object with hostname and port
+ * @example
+ * {hostname: 'localhost', port: 25565}
+ */
 export interface IAddress {
+	/**
+	 * Hostname of the server
+	 */
 	hostname: string;
+	/**
+	 * Port of the server
+	 */
 	port: number;
 }
 

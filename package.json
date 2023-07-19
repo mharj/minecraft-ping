@@ -4,6 +4,7 @@
     "description": "Minecraft server status",
     "main": "dist/index.js",
     "scripts": {
+        "doc": "typedoc",
         "build": "tsc",
         "prepublishOnly": "npm run build",
         "lint": "eslint src",
@@ -47,12 +48,12 @@
         "@types/node": "^16.18.38",
         "@types/node-int64": "^0.4.29",
         "@types/varint": "^6.0.1",
-        "@typescript-eslint/eslint-plugin": "^6.0.0",
-        "@typescript-eslint/parser": "^6.0.0",
+        "@typescript-eslint/eslint-plugin": "^6.1.0",
+        "@typescript-eslint/parser": "^6.1.0",
         "chai": "^4.3.7",
         "chai-as-promised": "^7.1.1",
         "dotenv": "^16.3.1",
-        "eslint": "^8.44.0",
+        "eslint": "^8.45.0",
         "eslint-config-prettier": "^8.8.0",
         "eslint-config-standard": "^17.1.0",
         "eslint-plugin-deprecation": "^1.4.1",
@@ -63,6 +64,7 @@
         "prettier": "^3.0.0",
         "source-map-support": "^0.5.21",
         "ts-node": "^10.9.1",
+        "typedoc": "^0.24.8",
         "typescript": "^5.1.6"
     },
     "author": "mharj",
@@ -72,7 +74,8 @@
     },
     "homepage": "https://github.com/mharj/minecraft-ping#readme",
     "dependencies": {
-        "mharj-result": "^0.3.1",
+        "@avanio/logger-like": "^0.1.1",
+        "mharj-result": "^0.4.1",
         "varint": "^6.0.0"
     }
 }

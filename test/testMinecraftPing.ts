@@ -13,7 +13,7 @@ describe('minecraft', () => {
 	ifWeHaveEnv('connect and get data', async function () {
 		this.timeout(10000);
 		const {MINECRAFT_SERVER, MINECRAFT_SERVER_PORT} = process.env;
-		const data = await ping(MINECRAFT_SERVER, MINECRAFT_SERVER_PORT ? parseInt(MINECRAFT_SERVER_PORT, 10) : undefined);
+		const data = await ping({hostname: MINECRAFT_SERVER, port: MINECRAFT_SERVER_PORT ? parseInt(MINECRAFT_SERVER_PORT, 10) : undefined});
 		expect(data).not.to.be.null;
 		expect(data).to.have.all.keys('description', 'players', 'version', 'ping', 'enforcesSecureChat', 'previewsChat');
 		expect(data.description).to.have.all.keys('text', 'extra');
@@ -31,7 +31,7 @@ describe('minecraft', () => {
 		expect(data.version).to.have.all.keys('name', 'protocol');
 	});
 	it.skip('should connect eu.mineplex.com', async () => {
-		const data = await pingUri('minecraft://eu.mineplex.com');
+		const data = await pingUri(Promise.resolve('minecraft://eu.mineplex.com'));
 		expect(data).not.to.be.null;
 		expect(data).to.have.all.keys('description', 'players', 'version', 'ping', 'favicon', 'modinfo');
 		expect(data.description).to.have.all.keys('text', 'extra');
@@ -39,7 +39,7 @@ describe('minecraft', () => {
 		expect(data.version).to.have.all.keys('name', 'protocol');
 	});
 	it('should connect play.royallegacy.net', async () => {
-		const data = await pingUri('minecraft://play.royallegacy.net');
+		const data = await pingUri(() => 'minecraft://play.royallegacy.net');
 		expect(data).not.to.be.null;
 		expect(data).to.have.all.keys('description', 'players', 'version', 'ping', 'favicon', 'modinfo');
 		expect(data.description).to.have.all.keys('text', 'extra');
@@ -47,7 +47,7 @@ describe('minecraft', () => {
 		expect(data.version).to.have.all.keys('name', 'protocol');
 	});
 	it.skip('should connect etherlands.com', async () => {
-		const data = await pingUri('minecraft://etherlands.com');
+		const data = await pingUri(() => Promise.resolve('minecraft://etherlands.com'));
 		expect(data).not.to.be.null;
 		expect(data).to.have.all.keys('description', 'players', 'version', 'ping', 'favicon');
 		expect(data.description).to.have.all.keys('text');
@@ -55,9 +55,9 @@ describe('minecraft', () => {
 		expect(data.version).to.have.all.keys('name', 'protocol');
 	});
 	it('should not connect', async () => {
-		await expect(ping('localhost', 26262)).to.eventually.be.rejectedWith(Error);
+		await expect(ping({hostname: 'localhost', port: 26262})).to.eventually.be.rejectedWith(Error);
 	}).timeout(5000);
 	it('should not connect with small timeout', async () => {
-		await expect(ping('google.com', 26262, {timeout: 100})).to.eventually.be.rejectedWith(Error);
+		await expect(ping({hostname: 'google.com', port: 26262}, {timeout: 100})).to.eventually.be.rejectedWith(Error);
 	}).timeout(1000);
 });

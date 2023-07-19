@@ -2,14 +2,14 @@ import {decode, encodingLength} from 'varint';
 import internal, {Writable} from 'stream';
 import {MinecraftPackageType} from './minecraftPackets';
 
-interface IHeader {
+export interface IPacketHeader {
 	id: MinecraftPackageType;
 	length: number;
 	offset: number;
 }
 
 export class PacketDecoder extends Writable {
-	private packetInfo: IHeader | undefined;
+	private packetInfo: IPacketHeader | undefined;
 	private buffer: Buffer;
 
 	constructor(options?: internal.WritableOptions | undefined) {
@@ -17,6 +17,9 @@ export class PacketDecoder extends Writable {
 		this.buffer = Buffer.alloc(0);
 	}
 
+	/**
+	 * Promise to wait specific packet to be received
+	 */
 	public oncePromise<T>(event: string): Promise<T> {
 		return new Promise((resolve) => {
 			this.once(event, resolve);
@@ -61,7 +64,7 @@ export class PacketDecoder extends Writable {
 		callback();
 	}
 
-	private decodeHeader(buffer: Buffer): IHeader {
+	private decodeHeader(buffer: Buffer): IPacketHeader {
 		const length = decode(buffer);
 		return {
 			id: buffer.readUInt8(encodingLength(length)),
@@ -70,16 +73,22 @@ export class PacketDecoder extends Writable {
 		};
 	}
 
-	private getPayload(header: IHeader, data: Buffer) {
+	private getPayload(header: IPacketHeader, data: Buffer) {
 		return data.slice(header.offset, data.length);
 	}
 
+	/**
+	 * Decodes the handshake JSON data
+	 */
 	private decodeHandshake(buffer: Buffer): Record<string, unknown> {
 		const length = decode(buffer);
 		const data = buffer.slice(encodingLength(length), encodingLength(length) + length);
 		return JSON.parse(data.toString());
 	}
 
+	/**
+	 * Decodes the pong data
+	 */
 	private decodePong(data: Buffer): number {
 		const pongData = data.readBigUInt64BE(0);
 		return Number(BigInt(Date.now()) - pongData);

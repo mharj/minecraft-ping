@@ -33,5 +33,9 @@
 	"exclude": [
 		"node_modules",
 		"**/*.spec.ts",
-	]
+	],
+	"typedocOptions": {
+        "entryPoints": ["src/index.ts"],
+        "out": "docs"
+    }
 }
