@@ -6,6 +6,9 @@ Based on https://www.npmjs.com/package/minecraft-pinger javascript version.
 
 Hostname & Port object and URL can be provided as direct value, with Promise or callback function (sync or async).
 
+## API Documentation
+See [API Documentation](https://mharj.github.io/minecraft-ping/);
+
 ```javascript
 const data = await ping(); // localhost:25565
 ```
