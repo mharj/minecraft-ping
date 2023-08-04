@@ -1,14 +1,14 @@
 {
 	"compilerOptions": {
 		"module": "commonjs",
-		"target": "es2021",
+		"target": "es2022",
 		"lib": [
-			"es2021",
+			"es2023",
 			"DOM"
 		],
 		"rootDir": "./src",
 		"outDir": "./dist",
-		"moduleResolution": "node",
+		"moduleResolution": "node16",
 		"sourceRoot": "./src",
 		"types": [
 			"node"
@@ -18,13 +18,14 @@
 		"inlineSources": true,
 		"inlineSourceMap": true,
 		"forceConsistentCasingInFileNames": true,
+		"noUncheckedIndexedAccess": false,
 		"noImplicitReturns": true,
 		"noImplicitThis": true,
 		"noImplicitAny": true,
 		"importHelpers": false,
 		"strictNullChecks": true,
 		"noUnusedLocals": true,
-		"esModuleInterop": true,
+		"esModuleInterop": false,
 		"strict": true,
 	},
 	"include": [

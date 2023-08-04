@@ -1,5 +1,5 @@
 import {decode, encodingLength} from 'varint';
-import internal, {Writable} from 'stream';
+import {Writable, WritableOptions} from 'stream';
 import {MinecraftPackageType} from './minecraftPackets';
 
 export interface IPacketHeader {
@@ -12,7 +12,7 @@ export class PacketDecoder extends Writable {
 	private packetInfo: IPacketHeader | undefined;
 	private buffer: Buffer;
 
-	constructor(options?: internal.WritableOptions | undefined) {
+	constructor(options?: WritableOptions | undefined) {
 		super(options);
 		this.buffer = Buffer.alloc(0);
 	}
