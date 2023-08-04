@@ -1,9 +1,11 @@
 /* eslint-disable no-unused-expressions */
 import 'mocha';
-import chai, {expect} from 'chai';
+import * as chai from 'chai';
+import * as chaiAsPromised from 'chai-as-promised';
+import * as dotenv from 'dotenv';
 import {ping, pingUri} from '../src';
-import chaiAsPromised from 'chai-as-promised';
-import dotenv from 'dotenv';
+
+const expect = chai.expect;
 
 dotenv.config();
 const ifWeHaveEnv = process.env.MINECRAFT_SERVER && process.env.MINECRAFT_SERVER_PORT ? it : it.skip;

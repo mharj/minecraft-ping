@@ -1,11 +1,12 @@
 /* eslint-disable no-unused-expressions */
 import 'mocha';
-import chai, {expect} from 'chai';
-import {pingResult, pingUriResult} from '../src';
-import chaiAsPromised from 'chai-as-promised';
-import dotenv from 'dotenv';
-import {IMinecraftData} from '../src/interfaces';
+import * as chai from 'chai';
+import * as chaiAsPromised from 'chai-as-promised';
+import * as dotenv from 'dotenv';
+import {IMinecraftData, pingResult, pingUriResult} from '../src';
 import {Result} from 'mharj-result';
+
+const expect = chai.expect;
 
 dotenv.config();
 const ifWeHaveEnv = process.env.MINECRAFT_SERVER && process.env.MINECRAFT_SERVER_PORT ? it : it.skip;
