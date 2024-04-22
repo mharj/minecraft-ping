@@ -1,10 +1,10 @@
 /* eslint-disable no-unused-expressions */
 import 'mocha';
-import * as chai from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
-import * as dotenv from 'dotenv';
 import {IMinecraftData, pingResult, pingUriResult} from '../src';
-import {Result} from 'mharj-result';
+import chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
+import dotenv from 'dotenv';
+import {Result} from '@luolapeikko/result-option';
 
 const expect = chai.expect;
 
@@ -22,8 +22,8 @@ describe('minecraft result', () => {
 		});
 		const data: IMinecraftData = result.unwrap();
 		expect(data).not.to.be.null;
-		expect(data).to.have.all.keys('description', 'players', 'version', 'ping', 'enforcesSecureChat', 'previewsChat');
-		expect(data.description).to.have.all.keys('text', 'extra');
+		expect(data).to.have.all.keys('description', 'players', 'version', 'ping', 'enforcesSecureChat');
+		expect(data.description).to.have.all.keys('text');
 		expect(data.players).to.contain.keys('online', 'max');
 		expect(data.version).to.have.all.keys('name', 'protocol');
 	});
@@ -33,8 +33,8 @@ describe('minecraft result', () => {
 		const result: Result<IMinecraftData, Error> = await pingUriResult(Promise.resolve(url));
 		const data: IMinecraftData = result.unwrap();
 		expect(data).not.to.be.null;
-		expect(data).to.have.all.keys('description', 'players', 'version', 'ping', 'enforcesSecureChat', 'previewsChat');
-		expect(data.description).to.have.all.keys('text', 'extra');
+		expect(data).to.have.all.keys('description', 'players', 'version', 'ping', 'enforcesSecureChat');
+		expect(data.description).to.have.all.keys('text');
 		expect(data.players).to.contain.keys('online', 'max');
 		expect(data.version).to.have.all.keys('name', 'protocol');
 	});

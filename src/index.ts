@@ -1,7 +1,7 @@
 import {createConnection, isIP, Socket} from 'net';
 import {createHandshakePacket, createPingPacket} from './minecraftPackets';
-import {Err, Ok, Result} from 'mharj-result';
-import {IAddress, IHandshakeData, IMinecraftData} from './interfaces';
+import {Err, Ok, Result} from '@luolapeikko/result-option';
+import type {IAddress, IHandshakeData, IMinecraftData} from './interfaces';
 import type {ILoggerLike} from '@avanio/logger-like';
 import {PacketDecoder} from './PacketDecoder';
 import {srvRecordResult} from './dnsSrv';
@@ -80,7 +80,7 @@ async function checkSrvRecord(hostname: string, options: CommonOptions): Promise
 
 function urlToAddress(uri: URL | string, options: CommonOptions): Partial<IAddress> {
 	const address: Partial<IAddress> = {};
-	const {protocol, hostname, port} = new URL(uri);
+	const {protocol, hostname, port} = typeof uri === 'string' ? new URL(uri) : uri;
 	if (!hostname || !protocol || protocol !== 'minecraft:') {
 		throw new TypeError('not correct minecraft URI');
 	}

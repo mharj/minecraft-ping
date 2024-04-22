@@ -14,28 +14,35 @@ export interface IAddress {
 	port: number;
 }
 
+export interface IHandshakeDescriptionData extends Record<string, unknown> {
+	text: string;
+	extra?: {
+		color: string;
+		text: string;
+		bold: boolean;
+		strikethrough: boolean;
+		extra: {
+			color: string;
+			text: string;
+		}[];
+	}[];
+}
+
+/**
+ * Server handshake player data
+ */
+export interface IHandshakePlayerData extends Record<string, unknown> {
+	online: number;
+	max: number;
+	sample?: {name: string; id: string}[];
+}
+
 /**
  * Server handshake JSON payload
  */
-export interface IHandshakeData {
-	description: {
-		text: string;
-		extra?: {
-			color?: string;
-			text: string;
-			bold?: boolean;
-			strikethrough?: boolean;
-			extra?: {
-				color: string;
-				text: string;
-			}[];
-		}[];
-	};
-	players: {
-		online: number;
-		max: number;
-		sample?: {name: string; id: string}[];
-	};
+export interface IHandshakeData extends Record<string, unknown> {
+	description: IHandshakeDescriptionData;
+	players: IHandshakePlayerData;
 	version: {name: string; protocol: number};
 	ping: number;
 	modinfo?: {type: string; modList: string[]};

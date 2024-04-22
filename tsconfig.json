@@ -1,14 +1,8 @@
 {
+	"extends": "@tsconfig/node16/tsconfig.json",
 	"compilerOptions": {
-		"module": "commonjs",
-		"target": "es2022",
-		"lib": [
-			"es2023",
-			"DOM"
-		],
 		"rootDir": "./src",
 		"outDir": "./dist",
-		"moduleResolution": "node16",
 		"sourceRoot": "./src",
 		"types": [
 			"node"
@@ -24,9 +18,7 @@
 		"noImplicitAny": true,
 		"importHelpers": false,
 		"strictNullChecks": true,
-		"noUnusedLocals": true,
-		"esModuleInterop": false,
-		"strict": true,
+		"noUnusedLocals": true
 	},
 	"include": [
 		"src",

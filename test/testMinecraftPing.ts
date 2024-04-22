@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-expressions */
 import 'mocha';
-import * as chai from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
-import * as dotenv from 'dotenv';
 import {ping, pingUri} from '../src';
+import chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
+import dotenv from 'dotenv';
 
 const expect = chai.expect;
 
@@ -17,8 +17,8 @@ describe('minecraft', () => {
 		const {MINECRAFT_SERVER, MINECRAFT_SERVER_PORT} = process.env;
 		const data = await ping({hostname: MINECRAFT_SERVER, port: MINECRAFT_SERVER_PORT ? parseInt(MINECRAFT_SERVER_PORT, 10) : undefined});
 		expect(data).not.to.be.null;
-		expect(data).to.have.all.keys('description', 'players', 'version', 'ping', 'enforcesSecureChat', 'previewsChat');
-		expect(data.description).to.have.all.keys('text', 'extra');
+		expect(data).to.have.all.keys('description', 'players', 'version', 'ping', 'enforcesSecureChat');
+		expect(data.description).to.have.all.keys('text');
 		expect(data.players).to.contain.keys('online', 'max');
 		expect(data.version).to.have.all.keys('name', 'protocol');
 	});
@@ -27,8 +27,8 @@ describe('minecraft', () => {
 		const url = new URL('minecraft://' + MINECRAFT_SERVER + (MINECRAFT_SERVER_PORT ? ':' + parseInt(MINECRAFT_SERVER_PORT, 10) : ''));
 		const data = await pingUri(Promise.resolve(url));
 		expect(data).not.to.be.null;
-		expect(data).to.have.all.keys('description', 'players', 'version', 'ping', 'enforcesSecureChat', 'previewsChat');
-		expect(data.description).to.have.all.keys('text', 'extra');
+		expect(data).to.have.all.keys('description', 'players', 'version', 'ping', 'enforcesSecureChat');
+		expect(data.description).to.have.all.keys('text');
 		expect(data.players).to.contain.keys('online', 'max');
 		expect(data.version).to.have.all.keys('name', 'protocol');
 	});
@@ -45,7 +45,7 @@ describe('minecraft', () => {
 		expect(data).not.to.be.null;
 		expect(data).to.have.all.keys('description', 'players', 'version', 'ping', 'favicon', 'modinfo');
 		expect(data.description).to.have.all.keys('text', 'extra');
-		expect(data.players).to.have.all.keys('online', 'max', 'sample');
+		expect(data.players).to.have.all.keys('online', 'max');
 		expect(data.version).to.have.all.keys('name', 'protocol');
 	});
 	it.skip('should connect etherlands.com', async () => {

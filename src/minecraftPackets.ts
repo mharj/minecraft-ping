@@ -1,5 +1,5 @@
 import {encode, encodingLength} from 'varint';
-import {IAddress} from './interfaces';
+import type {IAddress} from './interfaces';
 
 const PROTOCOL_VERSION = 736; // Minecraft 1.16.1
 

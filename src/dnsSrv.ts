@@ -1,4 +1,4 @@
-import {Err, Ok, Result} from 'mharj-result';
+import {Err, Ok, Result} from '@luolapeikko/result-option';
 import {resolveSrv, SrvRecord} from 'dns';
 
 /**
