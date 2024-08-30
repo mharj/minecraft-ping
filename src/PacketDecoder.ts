@@ -1,5 +1,5 @@
 import {decode, encodingLength} from 'varint';
-import {Writable, WritableOptions} from 'stream';
+import {Writable, type WritableOptions} from 'stream';
 import {MinecraftPackageType} from './minecraftPackets';
 
 export interface IPacketHeader {
@@ -32,30 +32,29 @@ export class PacketDecoder extends Writable {
 		}
 		this.buffer = Buffer.concat([this.buffer, chunk]);
 
-		if (this.packetInfo) {
-			if (this.buffer.length < this.packetInfo.length) {
-				// do we still need to read more?
-				return callback();
-			}
-			if (this.buffer.length > this.packetInfo.length) {
-				return callback(new Error('we did overrun expected data size!'));
-			}
+		if (this.buffer.length < this.packetInfo.length) {
+			// do we still need to read more?
+			return callback();
 		}
+		if (this.buffer.length > this.packetInfo.length) {
+			return callback(new Error('we did overrun expected data size!'));
+		}
+
 		try {
-			if (this.packetInfo) {
-				switch (this.packetInfo.id) {
-					case MinecraftPackageType.HANDSHAKE: {
-						this.emit('handshake', this.decodeHandshake(this.getPayload(this.packetInfo, this.buffer)));
-						break;
-					}
-					case MinecraftPackageType.PING: {
-						this.emit('pong', this.decodePong(this.getPayload(this.packetInfo, this.buffer)));
-						break;
-					}
-					default:
-						this.emit('error', new Error('Unknown packet id: ' + this.packetInfo.id));
+			switch (this.packetInfo.id) {
+				case MinecraftPackageType.HANDSHAKE: {
+					this.emit('handshake', this.decodeHandshake(this.getPayload(this.packetInfo, this.buffer)));
+					break;
 				}
+				case MinecraftPackageType.PING: {
+					this.emit('pong', this.decodePong(this.getPayload(this.packetInfo, this.buffer)));
+					break;
+				}
+				default:
+					// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+					this.emit('error', new Error(`Unknown packet id: ${this.packetInfo.id}`));
 			}
+
 			this.buffer = Buffer.alloc(0);
 			this.packetInfo = undefined;
 		} catch (err) {
@@ -74,7 +73,7 @@ export class PacketDecoder extends Writable {
 	}
 
 	private getPayload(header: IPacketHeader, data: Buffer) {
-		return data.slice(header.offset, data.length);
+		return data.subarray(header.offset, data.length);
 	}
 
 	/**
@@ -82,7 +81,7 @@ export class PacketDecoder extends Writable {
 	 */
 	private decodeHandshake(buffer: Buffer): Record<string, unknown> {
 		const length = decode(buffer);
-		const data = buffer.slice(encodingLength(length), encodingLength(length) + length);
+		const data = buffer.subarray(encodingLength(length), encodingLength(length) + length);
 		return JSON.parse(data.toString());
 	}
 

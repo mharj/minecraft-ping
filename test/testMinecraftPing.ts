@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable no-unused-expressions */
 import 'mocha';
 import {ping, pingUri} from '../src';
@@ -43,9 +44,9 @@ describe('minecraft', () => {
 	it('should connect play.royallegacy.net', async () => {
 		const data = await pingUri(() => 'minecraft://play.royallegacy.net');
 		expect(data).not.to.be.null;
-		expect(data).to.have.all.keys('description', 'players', 'version', 'ping', 'favicon', 'modinfo');
-		expect(data.description).to.have.all.keys('text', 'extra');
-		expect(data.players).to.have.all.keys('online', 'max');
+		expect(data).to.have.all.keys('description', 'players', 'version', 'ping', 'favicon');
+		expect(data.description).to.have.all.keys('text', 'color');
+		expect(data.players).to.have.all.keys('online', 'max', 'sample');
 		expect(data.version).to.have.all.keys('name', 'protocol');
 	});
 	it.skip('should connect etherlands.com', async () => {

@@ -1,62 +1,65 @@
 {
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "ecmaVersion": 2020,
-        "sourceType": "module",
-        "project": "./tsconfig.test.json"
-    },
-    "plugins": [
-        "@typescript-eslint",
-        "prettier",
-        "sonarjs",
-        "deprecation"
-    ],
-    "extends": [
-        "standard",
-        "eslint:recommended",
-        "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:prettier/recommended",
-        "plugin:sonarjs/recommended"
-    ],
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"ecmaVersion": 2022,
+		"sourceType": "module",
+		"project": "./tsconfig.test.json"
+	},
+	"plugins": ["@typescript-eslint", "@stylistic/ts", "prettier", "sonarjs", "deprecation"],
+	"extends": [
+		"standard",
+		"eslint:recommended",
+		"plugin:@typescript-eslint/eslint-recommended",
+		"plugin:@typescript-eslint/strict-type-checked",
+		"plugin:prettier/recommended",
+		"plugin:sonarjs/recommended"
+	],
     "rules": {
-        "camelcase": 1,
-        "@typescript-eslint/no-this-alias": [
-            "warn",
-            {
-                "allowedNames": [
-                    "self"
-                ]
-            }
-        ],
-        "sort-imports": ["warn", { "ignoreCase": true }],
-        "sort-keys": [
-            "warn",
-            "asc",
-            {
-                "caseSensitive": false,
-                "natural": true,
-                "minKeys": 4
-            }
-        ],
-        "no-unused-vars": "off",
-        "@typescript-eslint/no-unused-vars": [
-            "warn", // or "error"
-            {
-                "argsIgnorePattern": "^_",
-                "varsIgnorePattern": "^_",
-                "caughtErrorsIgnorePattern": "^_"
-            }
-        ],
-        "deprecation/deprecation": "warn",
-        "lines-between-class-members": "off",
-        "@typescript-eslint/lines-between-class-members": [
-            "warn",
-            "always",
-            {
-                "exceptAfterOverload": true,
-                "exceptAfterSingleLine": true
-            }
-        ]
+		"camelcase": 1,
+		"@typescript-eslint/no-this-alias": [
+			"warn",
+			{
+				"allowedNames": ["self"]
+			}
+		],
+		"sort-imports": ["warn", {"ignoreCase": true}],
+		"sort-keys": [
+			"warn",
+			"asc",
+			{
+				"caseSensitive": false,
+				"natural": true,
+				"minKeys": 5
+			}
+		],
+		"no-unused-vars": "off",
+		"@typescript-eslint/no-unused-vars": [
+			"warn",
+			{
+				"argsIgnorePattern": "^_",
+				"varsIgnorePattern": "^_",
+				"caughtErrorsIgnorePattern": "^_"
+			}
+		],
+		"deprecation/deprecation": "warn",
+		"lines-between-class-members": "off",
+		"@stylistic/ts/lines-between-class-members": [
+			"warn",
+			"always",
+			{
+				"exceptAfterOverload": true,
+				"exceptAfterSingleLine": true
+			}
+		],
+		"@typescript-eslint/consistent-type-imports": ["warn", {"prefer": "type-imports", "fixStyle": "inline-type-imports"}],
+		"@typescript-eslint/no-misused-promises": [
+			"error",
+			{
+				"checksVoidReturn": false
+			}
+		],
+		"@typescript-eslint/unbound-method": "off",
+		"@typescript-eslint/no-confusing-void-expression": "off",
+        "@typescript-eslint/no-unsafe-return": "off"
     }
 }

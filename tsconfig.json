@@ -12,13 +12,14 @@
 		"inlineSources": true,
 		"inlineSourceMap": true,
 		"forceConsistentCasingInFileNames": true,
-		"noUncheckedIndexedAccess": false,
+		"noUncheckedIndexedAccess": true,
 		"noImplicitReturns": true,
 		"noImplicitThis": true,
 		"noImplicitAny": true,
 		"importHelpers": false,
 		"strictNullChecks": true,
-		"noUnusedLocals": true
+		"noUnusedLocals": true,
+		"strict": true
 	},
 	"include": [
 		"src",

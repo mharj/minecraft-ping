@@ -1,6 +1,6 @@
-import {createConnection, isIP, Socket} from 'net';
+import {createConnection, isIP, type Socket} from 'net';
 import {createHandshakePacket, createPingPacket} from './minecraftPackets';
-import {Err, Ok, Result} from '@luolapeikko/result-option';
+import {Err, type IResult, Ok} from '@luolapeikko/result-option';
 import type {IAddress, IHandshakeData, IMinecraftData} from './interfaces';
 import type {ILoggerLike} from '@avanio/logger-like';
 import {PacketDecoder} from './PacketDecoder';
@@ -41,7 +41,7 @@ function ensureError(error: unknown): Error {
 	if (typeof error === 'string') {
 		return new Error(error);
 	}
-	return new Error(`unknown error: ${error}`);
+	return new Error(`unknown error: ${JSON.stringify(error)}`);
 }
 
 /**
@@ -94,7 +94,7 @@ function urlToAddress(uri: URL | string, options: CommonOptions): Partial<IAddre
 	if (realPort) {
 		address.port = realPort;
 	}
-	options.logger?.debug(`urlToAddress: ${uri} => ${JSON.stringify(address)}`);
+	options.logger?.debug(`urlToAddress: ${uri.toString()} => ${JSON.stringify(address)}`);
 	return address;
 }
 
@@ -115,7 +115,7 @@ export async function pingUri(uriArg: LoadableUrl, options: CommonOptions = {}):
  * @param {CommonOptions=} options options
  * @return {Promise<Result<IMinecraftData, Error>>}
  */
-export async function pingUriResult(uriArg: LoadableUrl, options: CommonOptions = {}): Promise<Result<IMinecraftData, Error>> {
+export async function pingUriResult(uriArg: LoadableUrl, options: CommonOptions = {}): Promise<IResult<IMinecraftData, Error>> {
 	try {
 		return Ok(await pingUri(uriArg, options));
 	} catch (err) {
@@ -137,7 +137,7 @@ export async function ping(addressArg?: LoadableAddress, options: CommonOptions 
 			address = dnsAddress;
 		}
 	}
-	options.logger?.info(`ping: ${address.hostname}:${address.port}`);
+	options.logger?.info(`ping: ${address.hostname}:${address.port.toString()}`);
 	return openConnection(address, options);
 }
 
@@ -147,7 +147,7 @@ export async function ping(addressArg?: LoadableAddress, options: CommonOptions 
  * @param {CommonOptions=} options options
  * @returns {Promise<Result<IMinecraftData>>}
  */
-export async function pingResult(addressArg?: LoadableAddress, options: CommonOptions = {}): Promise<Result<IMinecraftData, Error>> {
+export async function pingResult(addressArg?: LoadableAddress, options: CommonOptions = {}): Promise<IResult<IMinecraftData, Error>> {
 	try {
 		return Ok(await ping(addressArg, options));
 	} catch (err) {
@@ -167,7 +167,7 @@ function openConnection(address: IAddress, options: CommonOptions): Promise<IMin
 			reject(error);
 		};
 		const socket = createConnection(address.port, address.hostname, async () => {
-			options.logger?.debug(`openConnection: connected to ${address.hostname}:${address.port}`);
+			options.logger?.debug(`openConnection: connected to ${address.hostname}:${address.port.toString()}`);
 			const packetDecoder = new PacketDecoder();
 			socket.pipe(packetDecoder); // attach decoder
 			packetDecoder.once('error', (error) => handleError(error, socket));
@@ -206,10 +206,10 @@ function openConnection(address: IAddress, options: CommonOptions): Promise<IMin
 			reject(new Error('Timed out'));
 		});
 		// Packet timeout
-		const timeoutValue = options?.timeout || 10000;
+		const timeoutValue = options.timeout || 10000;
 		timeout = setTimeout(() => {
 			socket.end();
-			reject(new Error(`Timed out (${timeoutValue} ms)`));
+			reject(new Error(`Timed out (${timeoutValue.toString()} ms)`));
 		}, timeoutValue);
 	});
 }

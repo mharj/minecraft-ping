@@ -1,5 +1,11 @@
-import {Err, Ok, Result} from '@luolapeikko/result-option';
-import {resolveSrv, SrvRecord} from 'dns';
+import {Err, type IResult, Ok} from '@luolapeikko/result-option';
+import {resolveSrv, type SrvRecord} from 'dns';
+
+function assertAtLeastOne<T>(data: T[]): asserts data is [T, ...T[]] {
+	if (data.length === 0) {
+		throw new Error('Expected at least one element, got none');
+	}
+}
 
 /**
  * Resolves the SRV records for the given service name.
@@ -13,12 +19,13 @@ import {resolveSrv, SrvRecord} from 'dns';
  *   console.error(res.err());
  * }
  */
-export function srvRecordsResult(srv: string): Promise<Result<SrvRecord[], NodeJS.ErrnoException>> {
+export function srvRecordsResult(srv: string): Promise<IResult<[SrvRecord, ...SrvRecord[]], NodeJS.ErrnoException>> {
 	return new Promise((resolve) => {
 		resolveSrv(srv, (error, result) => {
 			if (error) {
 				resolve(Err(error));
 			} else {
+				assertAtLeastOne(result); // This is safe because resolveSrv will always return at least one element
 				resolve(Ok(result));
 			}
 		});
@@ -37,7 +44,7 @@ export function srvRecordsResult(srv: string): Promise<Result<SrvRecord[], NodeJ
  *   console.error(res.err());
  * }
  */
-export async function srvRecordResult(srv: string): Promise<Result<SrvRecord, NodeJS.ErrnoException>> {
+export async function srvRecordResult(srv: string): Promise<IResult<SrvRecord, NodeJS.ErrnoException>> {
 	const res = await srvRecordsResult(srv);
 	if (res.isOk) {
 		return Ok(res.ok()[0]);
