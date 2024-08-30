@@ -19,7 +19,8 @@
 		"importHelpers": false,
 		"strictNullChecks": true,
 		"noUnusedLocals": true,
-		"strict": true
+		"strict": true,
+		"esModuleInterop": true
 	},
 	"include": [
 		"src",
@@ -31,5 +32,8 @@
 	"typedocOptions": {
         "entryPoints": ["src/index.ts"],
         "out": "docs"
-    }
+    },
+	"ts-node": {
+		"esm": true
+	}
 }

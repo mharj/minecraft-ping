@@ -1,10 +1,13 @@
 import 'mocha';
-import * as chai from 'chai';
-import {srvRecordsResult} from '../src';
+import {srvRecordsResult} from '../src/index.js';
 
-const expect = chai.expect;
+let expect: Chai.ExpectStatic;
 
 describe('DnsSrv', function () {
+	before(async function () {
+		const chai = await import('chai');
+		expect = chai.expect;
+	});
 	it('should give error if no srv record found', async function () {
 		const data = await srvRecordsResult('_minecraft._tcp.eu.mineplex.com');
 		expect(data.isErr).to.equal(true);

@@ -1,14 +1,14 @@
 import {createConnection, isIP, type Socket} from 'net';
-import {createHandshakePacket, createPingPacket} from './minecraftPackets';
+import {createHandshakePacket, createPingPacket} from './minecraftPackets.js';
 import {Err, type IResult, Ok} from '@luolapeikko/result-option';
-import type {IAddress, IHandshakeData, IMinecraftData} from './interfaces';
+import type {IAddress, IHandshakeData, IMinecraftData} from './interfaces.js';
 import type {ILoggerLike} from '@avanio/logger-like';
-import {PacketDecoder} from './PacketDecoder';
-import {srvRecordResult} from './dnsSrv';
-export * from './interfaces';
-export * from './minecraftPackets';
-export * from './PacketDecoder';
-export * from './dnsSrv';
+import {PacketDecoder} from './PacketDecoder.js';
+import {srvRecordResult} from './dnsSrv.js';
+export * from './interfaces.js';
+export * from './minecraftPackets.js';
+export * from './PacketDecoder.js';
+export * from './dnsSrv.js';
 
 const defaultAddress: IAddress = {
 	hostname: 'localhost',

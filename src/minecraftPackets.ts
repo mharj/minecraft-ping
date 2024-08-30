@@ -1,5 +1,5 @@
-import {encode, encodingLength} from 'varint';
-import type {IAddress} from './interfaces';
+import type {IAddress} from './interfaces.js';
+import varInt from 'varint';
 
 const PROTOCOL_VERSION = 736; // Minecraft 1.16.1
 
@@ -15,7 +15,7 @@ export enum MinecraftPackageType {
  * @returns {Buffer} packet buffer data
  */
 function createPacket(packetId: MinecraftPackageType, data: Buffer): Buffer {
-	return Buffer.concat([Buffer.from(encode(encodingLength(packetId) + data.length)), Buffer.from(encode(packetId)), data]);
+	return Buffer.concat([Buffer.from(varInt.encode(varInt.encodingLength(packetId) + data.length)), Buffer.from(varInt.encode(packetId)), data]);
 }
 
 /**
@@ -31,11 +31,11 @@ export function createHandshakePacket(address: IAddress): Buffer {
 		createPacket(
 			MinecraftPackageType.HANDSHAKE,
 			Buffer.concat([
-				Buffer.from(encode(PROTOCOL_VERSION)),
-				Buffer.from(encode(address.hostname.length)),
+				Buffer.from(varInt.encode(PROTOCOL_VERSION)),
+				Buffer.from(varInt.encode(address.hostname.length)),
 				Buffer.from(address.hostname, 'utf8'),
 				portBuffer,
-				Buffer.from(encode(1)),
+				Buffer.from(varInt.encode(1)),
 			]),
 		),
 		createPacket(0, Buffer.alloc(0)),

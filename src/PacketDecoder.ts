@@ -1,6 +1,6 @@
-import {decode, encodingLength} from 'varint';
 import {Writable, type WritableOptions} from 'stream';
-import {MinecraftPackageType} from './minecraftPackets';
+import {MinecraftPackageType} from './minecraftPackets.js';
+import varInt from 'varint';
 
 export interface IPacketHeader {
 	id: MinecraftPackageType;
@@ -64,11 +64,11 @@ export class PacketDecoder extends Writable {
 	}
 
 	private decodeHeader(buffer: Buffer): IPacketHeader {
-		const length = decode(buffer);
+		const length = varInt.decode(buffer);
 		return {
-			id: buffer.readUInt8(encodingLength(length)),
-			length: length + encodingLength(length),
-			offset: encodingLength(length) + 1,
+			id: buffer.readUInt8(varInt.encodingLength(length)),
+			length: length + varInt.encodingLength(length),
+			offset: varInt.encodingLength(length) + 1,
 		};
 	}
 
@@ -80,8 +80,8 @@ export class PacketDecoder extends Writable {
 	 * Decodes the handshake JSON data
 	 */
 	private decodeHandshake(buffer: Buffer): Record<string, unknown> {
-		const length = decode(buffer);
-		const data = buffer.subarray(encodingLength(length), encodingLength(length) + length);
+		const length = varInt.decode(buffer);
+		const data = buffer.subarray(varInt.encodingLength(length), varInt.encodingLength(length) + length);
 		return JSON.parse(data.toString());
 	}
 

@@ -1,18 +1,21 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable no-unused-expressions */
 import 'mocha';
-import {ping, pingUri} from '../src';
-import chai from 'chai';
+import {ping, pingUri} from '../src/index.js';
 import chaiAsPromised from 'chai-as-promised';
 import dotenv from 'dotenv';
 
-const expect = chai.expect;
+let expect: Chai.ExpectStatic;
 
 dotenv.config();
 const ifWeHaveEnv = process.env.MINECRAFT_SERVER && process.env.MINECRAFT_SERVER_PORT ? it : it.skip;
-chai.use(chaiAsPromised);
 
 describe('minecraft', () => {
+	before(async function () {
+		const chai = await import('chai');
+		chai.use(chaiAsPromised);
+		expect = chai.expect;
+	});
 	ifWeHaveEnv('connect and get data', async function () {
 		this.timeout(10000);
 		const {MINECRAFT_SERVER, MINECRAFT_SERVER_PORT} = process.env;
