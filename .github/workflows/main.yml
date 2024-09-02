@@ -12,7 +12,7 @@ env:
   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
   PACKAGE_NAME: 'unknown'
   PACKAGE_VERSION: 'unknown'
-  NPM: 'npm'
+  NPM: 'pnpm'
   NPM_VERSION: 'unknown'
   HAVE_COVERAGE_SCRIPT: false
   HAVE_VALIDATE_SCRIPT: false
