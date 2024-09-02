@@ -7,54 +7,74 @@ on:
 
 env:
   # Setting an environment variable with the value of a configuration variable
+  # Setting an environment variable with the value of a configuration variable
   CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+  PACKAGE_NAME: 'unknown'
+  PACKAGE_VERSION: 'unknown'
+  NPM: 'npm'
+  NPM_VERSION: 'unknown'
+  HAVE_COVERAGE_SCRIPT: false
+  HAVE_VALIDATE_SCRIPT: false
+  HAVE_LINT_SCRIPT: false
+  HAVE_UNIT_TEST_SCRIPT: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: dcarbone/install-jq-action@v2
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        if: env.NPM == 'pnpm'
+      - uses: actions/setup-node@v4
         with:
-          node-version: "20.x"
-          registry-url: "https://registry.npmjs.org"
-      - run: npm ci
-      - run: npm test
-      - run: npm run lint
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
 
       # NPM version check
-      - name: Get current repo version
+      - name: Read package information
         run: |
-          echo "PACKAGE_NAME=$(jq -r .name package.json)" >> $GITHUB_ENV
-          echo "PACKAGE_VERSION=$(jq -r .version package.json)" >> $GITHUB_ENV
+          echo "PACKAGE_NAME=$(cat package.json | jq -r .name)" >> $GITHUB_ENV
+          echo "PACKAGE_VERSION=$(cat package.json | jq -r .version)" >> $GITHUB_ENV
           echo "HAVE_COVERAGE_SCRIPT=$(jq 'if .scripts.coverage == null then false else true end' package.json)" >> $GITHUB_ENV
+          echo "HAVE_VALIDATE_SCRIPT=$(jq 'if .scripts.validate == null then false else true end' package.json)" >> $GITHUB_ENV
+          echo "HAVE_LINT_SCRIPT=$(jq 'if .scripts.lint == null then false else true end' package.json)" >> $GITHUB_ENV
+          echo "HAVE_UNIT_TEST_SCRIPT=$(jq 'if .scripts.test == null then false else true end' package.json)" >> $GITHUB_ENV
 
       - name: Get current npmjs version for ${{env.PACKAGE_NAME}}
         run: |
           echo "NPM_VERSION=$(curl -s https://registry.npmjs.org/${{ env.PACKAGE_NAME }} | jq -r '."dist-tags".latest')" >> $GITHUB_ENV
+    
+      - name: Install dependencies
+        run: ${{ env.NPM }} install
 
-      # code coverage part
-      - run: npm run coverage
+      - name: Run validate
+        if: env.HAVE_VALIDATE_SCRIPT == 'true'
+        run: ${{ env.NPM }} run validate
+
+      - name: Run unit tests
+        if: env.HAVE_UNIT_TEST_SCRIPT == 'true'
+        run: ${{ env.NPM }} test
+
+      - name: Run linter checks
+        if: env.HAVE_LINT_SCRIPT == 'true'
+        run: ${{ env.NPM }} run lint
+
+      - name: Run and publish code coverage
         if: |
           github.ref == 'refs/heads/main' &&
           env.CC_TEST_REPORTER_ID != '' &&
-          env.HAVE_COVERAGE_SCRIPT == 'true' &&
-          env.PACKAGE_VERSION != env.NPM_VERSION
-
-      - name: Push coverage to Code Climate Test Reporter
-        if: |
-          github.ref == 'refs/heads/main' &&
-          env.CC_TEST_REPORTER_ID != '' &&
-          env.HAVE_COVERAGE_SCRIPT == 'true' &&
-          env.PACKAGE_VERSION != env.NPM_VERSION
-        uses: aktions/codeclimate-test-reporter@v1
+          env.HAVE_COVERAGE_SCRIPT == 'true'
+        uses: paambaati/codeclimate-action@v5.0.0
+        env:
+          CC_TEST_REPORTER_ID: ${{ env.CC_TEST_REPORTER_ID }}
         with:
-          codeclimate-test-reporter-id: ${{ env.CC_TEST_REPORTER_ID }}
+          coverageCommand: ${{ env.NPM }} run coverage
 
       # npm publish when PR done
       - name: Publish ${{env.PACKAGE_NAME}} ${{env.PACKAGE_VERSION}}
-        run: npm publish --access public
+        run: ${{ env.NPM }} publish --no-git-checks --access public
         if: |
           github.ref == 'refs/heads/main' &&
           env.NPM_TOKEN != '' &&
