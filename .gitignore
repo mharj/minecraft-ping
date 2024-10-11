@@ -62,3 +62,6 @@ typings/
 
 # build dir
 dist
+
+# unit test / coverage reports
+reports

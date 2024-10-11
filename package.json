@@ -2,24 +2,24 @@
     "name": "minecraft-server-ping",
     "version": "0.3.0",
     "description": "Minecraft server status",
-    "type": "module",
-    "main": "./dist/index.cjs",
-    "module": "./dist/index.js",
+    "main": "./dist/index.js",
+    "module": "./dist/index.mjs",
     "types": "./dist/index.d.ts",
     "exports": {
         ".": {
             "types": "./dist/index.d.ts",
-            "require": "./dist/index.cjs",
-            "import": "./dist/index.js"
+            "require": "./dist/index.js",
+            "import": "./dist/index.mjs"
         }
     },
     "scripts": {
         "doc": "typedoc",
-        "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+        "build": "tsup src/index.mts --minify --sourcemap --format cjs,esm --dts --clean",
         "prepublishOnly": "npm run build",
         "lint": "eslint src",
-        "test": "c8 mocha",
-        "coverage": "c8 report --reporter=lcovonly"
+        "test": "vitest test --run --no-isolate --coverage",
+        "coverage": "vitest test --run --no-isolate --reporter=dot --coverage --coverage.reporter=lcov",
+        "ui": "vitest --ui"
     },
     "mocha": {
         "exit": true,
@@ -51,37 +51,36 @@
         "dist"
     ],
     "engines": {
-        "node": ">=16.0.0"
+        "node": ">=18.0.0"
     },
     "devDependencies": {
-        "@stylistic/eslint-plugin": "^2.7.2",
-        "@stylistic/eslint-plugin-ts": "^2.7.2",
+        "@avanio/logger-like": "^0.2.5",
+        "@stylistic/eslint-plugin": "^2.9.0",
+        "@stylistic/eslint-plugin-ts": "^2.9.0",
         "@tsconfig/node16": "^16.1.3",
-        "@types/chai": "^4.3.19",
-        "@types/chai-as-promised": "^8.0.0",
-        "@types/mocha": "^10.0.7",
-        "@types/node": "^16.18.106",
+        "@types/node": "^18.19.55",
         "@types/node-int64": "^0.4.32",
         "@types/varint": "^6.0.3",
-        "@typescript-eslint/eslint-plugin": "^8.3.0",
-        "@typescript-eslint/parser": "^8.3.0",
+        "@typescript-eslint/eslint-plugin": "^8.8.1",
+        "@typescript-eslint/parser": "^8.8.1",
+        "@vitest/coverage-v8": "^2.1.2",
+        "@vitest/ui": "^2.1.2",
         "c8": "^10.1.2",
-        "chai": "^5.1.1",
-        "chai-as-promised": "^8.0.0",
         "dotenv": "^16.4.5",
-        "eslint": "^8.57.0",
+        "eslint": "^8.57.1",
         "eslint-config-prettier": "^9.1.0",
         "eslint-config-standard": "^17.1.0",
         "eslint-plugin-deprecation": "^3.0.0",
         "eslint-plugin-prettier": "^5.2.1",
         "eslint-plugin-sonarjs": "^0.23.0",
-        "mocha": "^10.7.3",
         "prettier": "^3.3.3",
         "source-map-support": "^0.5.21",
         "ts-node": "^10.9.2",
-        "tsup": "^8.2.4",
-        "typedoc": "^0.26.6",
-        "typescript": "^5.5.4"
+        "tsup": "^8.3.0",
+        "typedoc": "^0.26.8",
+        "typescript": "^5.6.3",
+        "vite": "^5.4.8",
+        "vitest": "^2.1.2"
     },
     "author": "mharj",
     "license": "MIT",
@@ -90,9 +89,11 @@
     },
     "homepage": "https://github.com/mharj/minecraft-ping#readme",
     "dependencies": {
-        "@avanio/logger-like": "^0.2.0",
-        "@luolapeikko/result-option": "^0.6.6",
+        "@luolapeikko/result-option": "^1.0.3",
         "varint": "^6.0.0"
+    },
+    "peerDependencies": {
+        "@avanio/logger-like": "^0.0 || ^0.1 || ^0.2"
     },
     "packageManager": "pnpm@9.9.0+sha512.60c18acd138bff695d339be6ad13f7e936eea6745660d4cc4a776d5247c540d0edee1a563695c183a66eb917ef88f2b4feb1fc25f32a7adcadc7aaf3438e99c1"
 }

@@ -30,7 +30,7 @@
 		"**/*.spec.ts",
 	],
 	"typedocOptions": {
-        "entryPoints": ["src/index.ts"],
+        "entryPoints": ["src/index.mts"],
         "out": "docs"
     },
 	"ts-node": {
