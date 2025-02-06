@@ -1,5 +1,5 @@
-import {Err, type IResult, Ok} from '@luolapeikko/result-option';
 import {resolveSrv, type SrvRecord} from 'dns';
+import {Err, type IResult, Ok} from '@luolapeikko/result-option';
 
 function assertAtLeastOne<T>(data: T[]): asserts data is [T, ...T[]] {
 	if (data.length === 0) {

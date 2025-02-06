@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/restrict-plus-operands */
-/* eslint-disable no-unused-expressions */
+import dotenv from 'dotenv';
 import {describe, expect, it} from 'vitest';
 import {ping, pingUri} from '../src/index.mjs';
-import dotenv from 'dotenv';
 
 dotenv.config();
 const ifWeHaveEnv = process.env.MINECRAFT_SERVER && process.env.MINECRAFT_SERVER_PORT ? it : it.skip;
@@ -19,7 +17,8 @@ describe('minecraft', () => {
 	});
 	ifWeHaveEnv('connect and get data with uri', async () => {
 		const {MINECRAFT_SERVER, MINECRAFT_SERVER_PORT} = process.env;
-		const url = new URL('minecraft://' + MINECRAFT_SERVER + (MINECRAFT_SERVER_PORT ? ':' + parseInt(MINECRAFT_SERVER_PORT, 10) : ''));
+		const portString = MINECRAFT_SERVER_PORT ? `:${parseInt(MINECRAFT_SERVER_PORT, 10)}` : '';
+		const url = new URL(`minecraft://${MINECRAFT_SERVER}${portString}`);
 		const data = await pingUri(Promise.resolve(url));
 		expect(data).not.to.be.eq(null);
 		expect(data).to.have.all.keys('description', 'players', 'version', 'ping', 'enforcesSecureChat');

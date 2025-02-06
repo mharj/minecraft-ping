@@ -1,5 +1,5 @@
-import type {IAddress} from './interfaces.mjs';
 import varInt from 'varint';
+import type {IAddress} from './interfaces.mjs';
 
 const PROTOCOL_VERSION = 736; // Minecraft 1.16.1
 

@@ -1,10 +1,10 @@
 import {createConnection, isIP, type Socket} from 'net';
-import {createHandshakePacket, createPingPacket} from './minecraftPackets.mjs';
-import {Err, type IResult, Ok} from '@luolapeikko/result-option';
-import type {IAddress, IHandshakeData, IMinecraftData} from './interfaces.mjs';
 import type {ILoggerLike} from '@avanio/logger-like';
-import {PacketDecoder} from './PacketDecoder.mjs';
+import {Err, type IResult, Ok} from '@luolapeikko/result-option';
 import {srvRecordResult} from './dnsSrv.mjs';
+import type {IAddress, IHandshakeData, IMinecraftData} from './interfaces.mjs';
+import {createHandshakePacket, createPingPacket} from './minecraftPackets.mjs';
+import {PacketDecoder} from './PacketDecoder.mjs';
 export * from './interfaces.mjs';
 export * from './minecraftPackets.mjs';
 export * from './PacketDecoder.mjs';

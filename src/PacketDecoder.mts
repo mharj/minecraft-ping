@@ -1,6 +1,6 @@
 import {Writable, type WritableOptions} from 'stream';
-import {MinecraftPackageType} from './minecraftPackets.mjs';
 import varInt from 'varint';
+import {MinecraftPackageType} from './minecraftPackets.mjs';
 
 export interface IPacketHeader {
 	id: MinecraftPackageType;

@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/restrict-plus-operands */
-/* eslint-disable no-unused-expressions */
+import {type IResult} from '@luolapeikko/result-option';
+import dotenv from 'dotenv';
 import {describe, expect, it} from 'vitest';
 import {type IMinecraftData, pingResult, pingUriResult} from '../src/index.mjs';
-import dotenv from 'dotenv';
-import {type IResult} from '@luolapeikko/result-option';
 
 dotenv.config();
 const ifWeHaveEnv = process.env.MINECRAFT_SERVER && process.env.MINECRAFT_SERVER_PORT ? it : it.skip;
@@ -24,7 +22,8 @@ describe('minecraft result', () => {
 	});
 	ifWeHaveEnv('connect and get data with uri', async () => {
 		const {MINECRAFT_SERVER, MINECRAFT_SERVER_PORT} = process.env;
-		const url = new URL('minecraft://' + MINECRAFT_SERVER + (MINECRAFT_SERVER_PORT ? ':' + parseInt(MINECRAFT_SERVER_PORT, 10) : ''));
+		const portString = MINECRAFT_SERVER_PORT ? `:${parseInt(MINECRAFT_SERVER_PORT, 10)}` : '';
+		const url = new URL(`minecraft://${MINECRAFT_SERVER}${portString}`);
 		const result: IResult<IMinecraftData, Error> = await pingUriResult(Promise.resolve(url));
 		const data: IMinecraftData = result.unwrap();
 		expect(data).not.to.be.eq(null);
