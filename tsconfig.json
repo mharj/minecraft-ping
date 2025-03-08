@@ -1,5 +1,5 @@
 {
-	"extends": "@tsconfig/node16/tsconfig.json",
+	"extends": "@tsconfig/node18/tsconfig.json",
 	"compilerOptions": {
 		"rootDir": "./src",
 		"outDir": "./dist",
@@ -32,8 +32,5 @@
 	"typedocOptions": {
         "entryPoints": ["src/index.mts"],
         "out": "docs"
-    },
-	"ts-node": {
-		"esm": true
-	}
+    }
 }

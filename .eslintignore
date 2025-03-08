@@ -1,6 +1,0 @@
-dist
-docs
-coverage
-.nyc_output
-.github
-vite.config.mts

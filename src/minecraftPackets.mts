@@ -26,7 +26,7 @@ function createPacket(packetId: MinecraftPackageType, data: Buffer): Buffer {
 export function createHandshakePacket(address: IAddress): Buffer {
 	const portBuffer = Buffer.allocUnsafe(2);
 	portBuffer.writeUInt16BE(address.port, 0);
-	// Return hansdhake packet with request packet
+	// Return handshake packet with request packet
 	return Buffer.concat([
 		createPacket(
 			MinecraftPackageType.HANDSHAKE,

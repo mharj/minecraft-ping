@@ -206,7 +206,7 @@ function openConnection(address: IAddress, options: CommonOptions): Promise<IMin
 			reject(new Error('Timed out'));
 		});
 		// Packet timeout
-		const timeoutValue = options.timeout || 10000;
+		const timeoutValue = options.timeout ?? 10000;
 		timeout = setTimeout(() => {
 			socket.end();
 			reject(new Error(`Timed out (${timeoutValue.toString()} ms)`));
