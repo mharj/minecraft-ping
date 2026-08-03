@@ -1,36 +1,29 @@
 {
-	"extends": "@tsconfig/node18/tsconfig.json",
-	"compilerOptions": {
-		"rootDir": "./src",
-		"outDir": "./dist",
-		"sourceRoot": "./src",
-		"types": [
-			"node"
-		],
-		"declaration": true,
-		"removeComments": false,
-		"inlineSources": true,
-		"inlineSourceMap": true,
-		"forceConsistentCasingInFileNames": true,
-		"noUncheckedIndexedAccess": true,
-		"noImplicitReturns": true,
-		"noImplicitThis": true,
-		"noImplicitAny": true,
-		"importHelpers": false,
-		"strictNullChecks": true,
-		"noUnusedLocals": true,
-		"strict": true,
-		"esModuleInterop": true
-	},
-	"include": [
-		"src",
-	],
-	"exclude": [
-		"node_modules",
-		"**/*.spec.ts",
-	],
-	"typedocOptions": {
-        "entryPoints": ["src/index.mts"],
-        "out": "docs"
-    }
+  "extends": "@tsconfig/node18/tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "sourceRoot": "./src",
+    "types": ["node"],
+    "declaration": true,
+    "removeComments": false,
+    "inlineSources": true,
+    "inlineSourceMap": true,
+    "forceConsistentCasingInFileNames": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "importHelpers": false,
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "strict": true,
+    "esModuleInterop": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "**/*.spec.ts"],
+  "typedocOptions": {
+    "entryPoints": ["src/index.mts"],
+    "out": "docs"
+  }
 }

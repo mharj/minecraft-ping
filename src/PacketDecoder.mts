@@ -12,7 +12,7 @@ export class PacketDecoder extends Writable {
 	private packetInfo: IPacketHeader | undefined;
 	private buffer: Buffer;
 
-	constructor(options?: WritableOptions) {
+	public constructor(options?: WritableOptions) {
 		super(options);
 		this.buffer = Buffer.alloc(0);
 	}
@@ -34,9 +34,11 @@ export class PacketDecoder extends Writable {
 
 		if (this.buffer.length < this.packetInfo.length) {
 			// do we still need to read more?
+			// biome-ignore lint/correctness/noVoidTypeReturn: else have issues
 			return callback();
 		}
 		if (this.buffer.length > this.packetInfo.length) {
+			// biome-ignore lint/correctness/noVoidTypeReturn: else have issues
 			return callback(new Error('we did overrun expected data size!'));
 		}
 

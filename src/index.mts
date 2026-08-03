@@ -1,14 +1,15 @@
-import {createConnection, isIP, type Socket} from 'net';
-import type {ILoggerLike} from '@avanio/logger-like';
+import type {ILoggerLike} from '@luolapeikko/logger-type';
 import {Err, type IResult, Ok} from '@luolapeikko/result-option';
+import {createConnection, isIP, type Socket} from 'net';
 import {srvRecordResult} from './dnsSrv.mjs';
 import type {IAddress, IHandshakeData, IMinecraftData} from './interfaces.mjs';
 import {createHandshakePacket, createPingPacket} from './minecraftPackets.mjs';
 import {PacketDecoder} from './PacketDecoder.mjs';
+
+export * from './dnsSrv.mjs';
 export * from './interfaces.mjs';
 export * from './minecraftPackets.mjs';
 export * from './PacketDecoder.mjs';
-export * from './dnsSrv.mjs';
 
 const defaultAddress: IAddress = {
 	hostname: 'localhost',
@@ -85,7 +86,7 @@ function urlToAddress(uri: URL | string, options: CommonOptions): Partial<IAddre
 		throw new TypeError('not correct minecraft URI');
 	}
 	const realPort = port ? parseInt(port, 10) : undefined;
-	if (realPort && isNaN(realPort)) {
+	if (realPort && Number.isNaN(realPort)) {
 		throw new TypeError('not correct minecraft URI');
 	}
 	if (hostname) {

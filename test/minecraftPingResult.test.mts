@@ -1,4 +1,4 @@
-import {type IResult} from '@luolapeikko/result-option';
+import type {IResult} from '@luolapeikko/result-option';
 import dotenv from 'dotenv';
 import {describe, expect, it} from 'vitest';
 import {type IMinecraftData, pingResult, pingUriResult} from '../src/index.mjs';

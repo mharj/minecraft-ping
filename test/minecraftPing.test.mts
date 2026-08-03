@@ -26,10 +26,10 @@ describe('minecraft', () => {
 		expect(data.players).to.contain.keys('online', 'max');
 		expect(data.version).to.have.all.keys('name', 'protocol');
 	});
-	it.skip('should connect eu.mineplex.com', async () => {
+	it('should connect eu.mineplex.com', async () => {
 		const data = await pingUri(Promise.resolve('minecraft://eu.mineplex.com'));
 		expect(data).not.to.be.eq(null);
-		expect(data).to.have.all.keys('description', 'players', 'version', 'ping', 'favicon', 'modinfo');
+		expect(data).to.have.all.keys('description', 'players', 'version', 'ping', 'favicon');
 		expect(data.description).to.have.all.keys('text', 'extra');
 		expect(data.players).to.have.all.keys('online', 'max', 'sample');
 		expect(data.version).to.have.all.keys('name', 'protocol');

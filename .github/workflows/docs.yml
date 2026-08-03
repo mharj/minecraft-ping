@@ -1,11 +1,14 @@
 # Simple workflow for deploying static content to GitHub Pages
-name: TSDoc Actions
+name: Typedoc Actions
 
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
+    paths:
+      - ".github/workflows/docs.yml"
+      - "packages/**"
+      - "package.json"
+      - "README.md"
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -16,7 +19,7 @@ permissions:
   id-token: write
 
 env:
-  NPM: 'npm'
+  NPM: "pnpm"
 
 jobs:
   # Single deploy job since we're just deploying
@@ -28,41 +31,32 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
-    # Specify runner + deployment step
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Identify project environment variables
-        run: |
-          [ -f pnpm-lock.yaml ] && echo "NPM=pnpm" | tee -a $GITHUB_ENV
-
-      - uses: pnpm/action-setup@v4
-        if: env.NPM == 'pnpm'
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@9b5745cdf0a2e8c2620f0746130f809adb911c19 # v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: '20.x'
+          node-version: 'lts/*'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
         run: ${{ env.NPM }} install
 
-      - name: TSDoc Action
-        uses: erikyo/tsdoc-action@v1
-        with:
-          source_dir: ./src/
-          output_dir: ./docs
-          front_page: README.md
+      - name: Install dependencies
+        run: ${{ env.NPM }} run build
+
+      - name: Generate Documentation
+        run: ${{ env.NPM }} run docs
+
       - name: Setup Pages
-        uses: actions/configure-pages@v3
+        uses: actions/configure-pages@v6
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
-          # Upload entire repository
-          path: './docs'
+          path: "./docs"
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

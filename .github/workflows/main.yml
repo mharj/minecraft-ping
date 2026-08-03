@@ -5,81 +5,61 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  id-token: write # Required for OIDC
+  contents: read
+
 env:
   # Setting an environment variable with the value of a configuration variable
-  PUBLISH_BRANCH: 'refs/heads/main'
-  CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-  PACKAGE_NAME: 'unknown'
-  PACKAGE_VERSION: 'unknown'
-  NPM: 'npm'
-  NPM_VERSION: 'unknown'
-  HAVE_COVERAGE_SCRIPT: false
+  PUBLISH_BRANCH: "refs/heads/main"
+  PACKAGE_NAME: "unknown"
+  PACKAGE_VERSION: "unknown"
+  PACKAGE_MANAGER: "npm"
+  NPM_VERSION: "unknown"
   HAVE_VALIDATE_SCRIPT: false
   HAVE_LINT_SCRIPT: false
-  HAVE_UNIT_TEST_SCRIPT: false
+  HAVE_TEST_SCRIPT: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: dcarbone/install-jq-action@v2
-      - uses: actions/checkout@v4
-
-      - name: Identify project environment variables
-        run: |
-          [ -f pnpm-lock.yaml ] && echo "NPM=pnpm" | tee -a $GITHUB_ENV
-          echo "PACKAGE_NAME=$(cat package.json | jq -r .name)" | tee -a $GITHUB_ENV
-          echo "PACKAGE_VERSION=$(cat package.json | jq -r .version)" | tee -a $GITHUB_ENV
-          echo "HAVE_COVERAGE_SCRIPT=$(jq 'if .scripts.coverage == null then false else true end' package.json)" | tee -a $GITHUB_ENV
-          echo "HAVE_VALIDATE_SCRIPT=$(jq 'if .scripts.validate == null then false else true end' package.json)" | tee -a $GITHUB_ENV
-          echo "HAVE_LINT_SCRIPT=$(jq 'if .scripts.lint == null then false else true end' package.json)" | tee -a $GITHUB_ENV
-          echo "HAVE_UNIT_TEST_SCRIPT=$(jq 'if .scripts.test == null then false else true end' package.json)"| tee -a $GITHUB_ENV
-
-      - uses: pnpm/action-setup@v4
-        if: env.NPM == 'pnpm'
-
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: luolapeikko/github-actions/read-package-info@v0
+      - uses: pnpm/action-setup@9b5745cdf0a2e8c2620f0746130f809adb911c19 # v4
+        if: env.PACKAGE_MANAGER == 'pnpm'
+      - uses: actions/setup-node@v6
         with:
-          node-version: 'lts/*'
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Get current npmjs version for ${{env.PACKAGE_NAME}}
-        run: |
-          echo "NPM_VERSION=$(curl -s https://registry.npmjs.org/${{ env.PACKAGE_NAME }} | jq -r '."dist-tags".latest')" >> $GITHUB_ENV
+          node-version: "lts/*"
+          registry-url: "https://registry.npmjs.org"
 
       - name: Install dependencies
-        run: ${{ env.NPM }} install
+        run: ${{ env.PACKAGE_MANAGER }} install
 
       - name: Run validate
         if: env.HAVE_VALIDATE_SCRIPT == 'true'
-        run: ${{ env.NPM }} run validate
+        run: ${{ env.PACKAGE_MANAGER }} run validate
 
       - name: Run unit tests
-        if: env.HAVE_UNIT_TEST_SCRIPT == 'true'
-        run: ${{ env.NPM }} test
+        if: env.HAVE_TEST_SCRIPT == 'true'
+        run: ${{ env.PACKAGE_MANAGER }} test
 
       - name: Run linter checks
         if: env.HAVE_LINT_SCRIPT == 'true'
-        run: ${{ env.NPM }} run lint
+        run: ${{ env.PACKAGE_MANAGER }} run lint
 
       - name: Run and publish code coverage
         if: |
           github.ref == env.PUBLISH_BRANCH &&
-          env.CC_TEST_REPORTER_ID != '' &&
-          env.HAVE_COVERAGE_SCRIPT == 'true'
-        uses: paambaati/codeclimate-action@v5.0.0
-        env:
-          CC_TEST_REPORTER_ID: ${{ env.CC_TEST_REPORTER_ID }}
+          env.HAVE_TEST_SCRIPT == 'true'
+        uses: qltysh/qlty-action/coverage@fd52dc852530a708d68c3b7342f8d33d1df4cd55 # v2.2.1
         with:
-          coverageCommand: ${{ env.NPM }} run coverage
+          oidc: true
+          files: coverage/lcov.info
 
       # npm publish when PR done
       - name: Publish ${{env.PACKAGE_NAME}} ${{env.PACKAGE_VERSION}}
-        run: ${{ env.NPM }} publish --no-git-checks --access public
+        run: npm publish --no-git-checks --access public
         if: |
           github.ref == env.PUBLISH_BRANCH &&
-          env.NPM_TOKEN != '' &&
           env.PACKAGE_VERSION != env.NPM_VERSION
-        env:
-          NODE_AUTH_TOKEN: ${{ env.NPM_TOKEN }}
