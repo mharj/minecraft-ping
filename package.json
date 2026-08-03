@@ -1,6 +1,6 @@
 {
   "name": "minecraft-server-ping",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Minecraft server status",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -26,8 +26,14 @@
     "validate": "tsc --noEmit --project tsconfig.test.json"
   },
   "repository": "github:mharj/minecraft-ping",
-  "keywords": ["minecraft", "ping", "typescript"],
-  "files": ["dist"],
+  "keywords": [
+    "minecraft",
+    "ping",
+    "typescript"
+  ],
+  "files": [
+    "dist"
+  ],
   "engines": {
     "node": ">=18.0.0"
   },
