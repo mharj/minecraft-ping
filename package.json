@@ -17,7 +17,7 @@
     "default": "./dist/index.mjs"
   },
   "scripts": {
-    "doc": "typedoc",
+    "docs": "typedoc",
     "build": "tsdown src/index.mts --minify --sourcemap --format cjs,esm --dts --clean",
     "prepublishOnly": "npm run build",
     "lint": "biome check",

@@ -65,3 +65,6 @@ dist
 
 # unit test / coverage reports
 reports
+
+# docs
+docs
