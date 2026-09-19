@@ -26,14 +26,8 @@
     "validate": "tsc --noEmit --project tsconfig.test.json"
   },
   "repository": "github:mharj/minecraft-ping",
-  "keywords": [
-    "minecraft",
-    "ping",
-    "typescript"
-  ],
-  "files": [
-    "dist"
-  ],
+  "keywords": ["minecraft", "ping", "typescript"],
+  "files": ["dist"],
   "engines": {
     "node": ">=18.0.0"
   },
