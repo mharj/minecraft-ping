@@ -26,8 +26,14 @@
     "validate": "tsc --noEmit --project tsconfig.test.json"
   },
   "repository": "github:mharj/minecraft-ping",
-  "keywords": ["minecraft", "ping", "typescript"],
-  "files": ["dist"],
+  "keywords": [
+    "minecraft",
+    "ping",
+    "typescript"
+  ],
+  "files": [
+    "dist"
+  ],
   "engines": {
     "node": ">=18.0.0"
   },
@@ -61,5 +67,5 @@
     "@types/varint": "^6.0",
     "varint": "^6.0"
   },
-  "packageManager": "pnpm@10.34.5+sha512.a4ee05f2f73658255bd6a89859c065a45c28a57daefae2c893a168ee2b73168c37b91e83e57ea67654ad03f03031746430e8bce38e362e042605fb8abc80192e"
+  "packageManager": "pnpm@12.4.2+sha512.08adc6613180275c7c9edada39dcf08c9c61ad4e7eaf330a4f3461f102b0f907423454d117f98e72d47fef0616070644d7bffc973a6a57f5090a6d7c368b07c9"
 }
